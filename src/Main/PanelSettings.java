@@ -1,5 +1,6 @@
 package Main;
 import entitys.Player;
+import objects.SuperObject;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -8,7 +9,7 @@ public class PanelSettings extends JPanel implements Runnable {
     //screen settings
     final int originalTileSize = 16;// 16x16 tile
     final int scale = 3;//3 x
-    public final int tileSize = originalTileSize * scale;//3x16 = 48x48 tiles
+    public final int tileSize = originalTileSize * scale;//3x16 = 48x48 tile
     public final int maxScreenCol = 16;
     public final int maxScreenRow = 12;
     public final int screenWidth = tileSize * maxScreenCol;// 768 pixels
@@ -24,9 +25,12 @@ public class PanelSettings extends JPanel implements Runnable {
     int fps = 60;
 
     KeyHandler keyH = new KeyHandler();
-    Thread gameThread;
     public Player player = new Player(this,keyH);
     TileManager tileM = new TileManager(this);
+    Thread gameThread;
+    public ObjectPlacment oPlacer =  new ObjectPlacment(this);
+    public CollisionDetection cDetection = new CollisionDetection(this);
+    public SuperObject obj[] = new SuperObject[10];// can display up to 10 objects
 
 
     public PanelSettings() {
@@ -35,6 +39,9 @@ public class PanelSettings extends JPanel implements Runnable {
         this.setDoubleBuffered(true);// better rendering performance
         this.addKeyListener(keyH);
         this.setFocusable(true);
+    }
+    public void setupGame(){
+        oPlacer.setObject();
     }
 
     public void startGameThread() {
@@ -98,6 +105,13 @@ public class PanelSettings extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         tileM.draw(g2);
+
+        for (SuperObject superObject : obj) {
+            if (superObject != null) {
+                superObject.draw(g2, this);
+            }
+        }
+
         player.draw(g2);
 
         g2.dispose();//saves memory

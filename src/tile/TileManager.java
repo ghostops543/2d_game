@@ -12,13 +12,13 @@ import java.util.Objects;
 
 public class TileManager extends Tile {
     PanelSettings gp;
-    Tile[] tiles;
-    int mapTileNum[] [];
+    public Tile[] tile;
+     public int mapTileNum[] [];
 
     public TileManager(PanelSettings gp) {
         this.gp = gp;
 
-        tiles = new Tile[10];
+        tile = new Tile[10];
 
         mapTileNum = new  int [gp.maxWorldCol][gp.maxWorldRow];
 
@@ -31,27 +31,27 @@ public class TileManager extends Tile {
 
         try {
 
-            tiles[0] = new Tile();
-                tiles[0].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/sand tile.png")));
-            tiles[1] = new Tile();
-                tiles[1].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/dungeon tile.png")));
-            tiles[2] = new Tile();
+            tile[0] = new Tile();
+                tile[0].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/sand tile.png")));
+            tile[1] = new Tile();
+                tile[1].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/dungeon tile.png")));
+            tile[2] = new Tile();
             if (tileSpriteNum == 1) {
-                tiles[2].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/water tile.png")));
+                tile[2].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/water tile.png")));
             }
             else if (tileSpriteNum == 2) {
-                tiles[2].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/water tile 2.png")));
+                tile[2].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/water tile 2.png")));
             }
-            tiles[3] = new Tile();
-            tiles[3].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/rock tile.png")));
-            tiles[3].collision = true;
+            tile[3] = new Tile();
+            tile[3].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/rock tile.png")));
+            tile[3].collision = true;
 
-            tiles[4] = new Tile();
-            tiles[4].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/grass tile.png")));
+            tile[4] = new Tile();
+            tile[4].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/grass tile.png")));
 
-            tiles[5] = new Tile();
-            tiles[5].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/grass rock tile.png")));
-            tiles[5].collision = true;
+            tile[5] = new Tile();
+            tile[5].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/grass rock tile.png")));
+            tile[5].collision = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,11 +109,11 @@ public class TileManager extends Tile {
                     int tileNum = mapTileNum[worldcol][worldrow];
                     int screenx = (worldcol * gp.tileSize) - gp.player.worldx + gp.player.screenx;
                     int screeny = (worldrow * gp.tileSize) - gp.player.worldy + gp.player.screeny;
-                    if(((worldcol + gp.tileSize) * gp.tileSize) > gp.player.worldx - gp.player.screenx//only renders tiles in player screen
+                    if(((worldcol + gp.tileSize) * gp.tileSize) > gp.player.worldx - gp.player.screenx//only renders tile in player screen
                         && ((worldcol - gp.tileSize) * gp.tileSize) < gp.player.worldx + gp.player.screenx
                         && ((worldrow + gp.tileSize) * gp.tileSize) > gp.player.worldy - gp.player.screeny
                         && ((worldrow - gp.tileSize) * gp.tileSize) < gp.player.worldy + gp.player.screeny){
-                        g2.drawImage(tiles[tileNum].image, screenx, screeny, gp.tileSize, gp.tileSize, null);
+                        g2.drawImage(tile[tileNum].image, screenx, screeny, gp.tileSize, gp.tileSize, null);
                     }
 
 

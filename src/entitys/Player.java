@@ -32,6 +32,7 @@ public class Player extends Entity {
 
 
 
+
         setDefaultValues();
         getPlayerImage();
 
@@ -39,7 +40,7 @@ public class Player extends Entity {
     public void setDefaultValues(){
         worldx = gp.tileSize * 24;
         worldy = gp.tileSize * 32;
-        speed = 6;
+        speed = 8;
         direction= "right";
     }
     public void getPlayerImage(){//gets sprite info
@@ -59,37 +60,71 @@ public class Player extends Entity {
 
     }
 
-    public void update(){
-        if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed){// stops sprite moving when stationary
+    public void update() {
+        if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {// stops sprite moving when stationary
             spriteCounter++;//sprite updater
-            if (spriteCounter > 10){
-                if (spriteNum ==1){
+            if (spriteCounter > 10) {
+                if (spriteNum == 1) {
                     spriteNum = 2;
-                }
-                else if (spriteNum == 2){
+                } else if (spriteNum == 2) {
                     spriteNum = 1;
                 }
                 spriteCounter = 0;
             }
-        }
 
-        if (keyH.upPressed) {
-            direction = "up";
-            worldy -= speed;
-        }
-        else if (keyH.downPressed){
-            direction = "down";
-            worldy += speed;
-        }
-        else if (keyH.leftPressed){
-            direction = "left";
-            worldx -= speed;
-        }
-        else if (keyH.rightPressed){
-            direction = "right";
-            worldx += speed;
-        }
 
+            if (keyH.upPressed) {
+                direction = "up";
+                solidArea.x = 4 * 3;//4 pixles x the scale
+                solidArea.y = 0;
+                solidArea.width = 32;
+                solidArea.height = 48;
+
+            } else if (keyH.downPressed) {
+                direction = "down";
+                solidArea.x = 4 * 3;//4 pixles x the scale
+                solidArea.y = 0;
+                solidArea.width = 24;
+                solidArea.height = 48;
+
+            } else if (keyH.leftPressed) {
+                direction = "left";
+                solidArea.x = 2 * 3;
+                solidArea.y = 2 * 3;
+                solidArea.width = 36;
+                solidArea.height = 36;
+
+            } else if (keyH.rightPressed) {
+                direction = "right";
+                solidArea.x = 2 * 3;
+                solidArea.y = 2 * 3;
+                solidArea.width = 36;
+                solidArea.height = 36;
+
+            }
+            //check tile collision
+            collisionOn = false;
+            gp.cDetection.checkTile(this);
+
+            if (collisionOn == false) {
+
+                switch (direction) {
+                    case "up":
+                        worldy -= speed;
+                        break;
+                    case "down":
+                        worldy += speed;
+                        break;
+                    case "left":
+                        worldx -= speed;
+                        break;
+                    case "right":
+                        worldx += speed;
+                        break;
+                }
+            }
+
+        }
     }
     public void draw(Graphics2D g2){
 //        g2.setColor(Color.WHITE);

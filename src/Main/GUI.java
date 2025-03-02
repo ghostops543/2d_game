@@ -16,6 +16,8 @@ public class GUI {
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
+
+        PanelSettings.setupGame();
         PanelSettings.startGameThread();
 
     }
