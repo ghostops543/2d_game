@@ -20,6 +20,7 @@ public class Player extends Entity {
     public final int screenx;
     public final int screeny;
 
+
     public Player(PanelSettings gp, KeyHandler keyH){
 
         this.gp = gp;
@@ -29,9 +30,8 @@ public class Player extends Entity {
         screeny = gp.screenHeight/2-(gp.tileSize/2);
 
         solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
-
-
-
+        solidAreaDefaultx = solidArea.x;
+        solidAreaDefaulty = solidArea.y;
 
         setDefaultValues();
         getPlayerImage();
@@ -106,6 +106,11 @@ public class Player extends Entity {
             collisionOn = false;
             gp.cDetection.checkTile(this);
 
+            //check object collision
+            int objIndex = gp.cDetection.checkObject(this,true);
+            pickUpObject(objIndex);
+
+            //if collision is false player can move
             if (collisionOn == false) {
 
                 switch (direction) {
@@ -125,6 +130,20 @@ public class Player extends Entity {
             }
 
         }
+    }
+    public void pickUpObject(int index) {
+        if (index != 999) {
+            String objectName = gp.obj[index].name;
+
+            switch (objectName) {
+                case "revolver":
+                    gp.obj[index] = null;
+                    break;
+                case "chest":
+            }
+
+        }
+
     }
     public void draw(Graphics2D g2){
 //        g2.setColor(Color.WHITE);

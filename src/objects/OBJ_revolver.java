@@ -14,5 +14,6 @@ public class OBJ_revolver extends SuperObject{
         }catch (IOException e){
             e.printStackTrace();
         }
+        collision = true;
     }
 }
