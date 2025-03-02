@@ -44,12 +44,14 @@ public class TileManager extends Tile {
             }
             tiles[3] = new Tile();
             tiles[3].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/rock tile.png")));
+            tiles[3].collision = true;
 
             tiles[4] = new Tile();
             tiles[4].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/grass tile.png")));
 
             tiles[5] = new Tile();
             tiles[5].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/grass rock tile.png")));
+            tiles[5].collision = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -107,7 +109,13 @@ public class TileManager extends Tile {
                     int tileNum = mapTileNum[worldcol][worldrow];
                     int screenx = (worldcol * gp.tileSize) - gp.player.worldx + gp.player.screenx;
                     int screeny = (worldrow * gp.tileSize) - gp.player.worldy + gp.player.screeny;
-                    g2.drawImage(tiles[tileNum].image, screenx, screeny, gp.tileSize, gp.tileSize, null);
+                    if(((worldcol + gp.tileSize) * gp.tileSize) > gp.player.worldx - gp.player.screenx//only renders tiles in player screen
+                        && ((worldcol - gp.tileSize) * gp.tileSize) < gp.player.worldx + gp.player.screenx
+                        && ((worldrow + gp.tileSize) * gp.tileSize) > gp.player.worldy - gp.player.screeny
+                        && ((worldrow - gp.tileSize) * gp.tileSize) < gp.player.worldy + gp.player.screeny){
+                        g2.drawImage(tiles[tileNum].image, screenx, screeny, gp.tileSize, gp.tileSize, null);
+                    }
+
 
 
             }

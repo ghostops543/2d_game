@@ -31,7 +31,7 @@ public class PanelSettings extends JPanel implements Runnable {
 
     public PanelSettings() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(Color.BLUE);
+        this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);// better rendering performance
         this.addKeyListener(keyH);
         this.setFocusable(true);
