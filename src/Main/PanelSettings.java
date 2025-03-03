@@ -6,6 +6,8 @@ import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+
 public class PanelSettings extends JPanel implements Runnable {
     //screen settings
     final int originalTileSize = 16;// 16x16 tile
@@ -22,18 +24,24 @@ public class PanelSettings extends JPanel implements Runnable {
 
     //fps
     int fps = 60;
-
-    KeyHandler keyH = new KeyHandler();
-    public Player player = new Player(this,keyH);
-    TileManager tileM = new TileManager(this);
+    //system
     Sound music = new Sound();
     Sound SE = new Sound();
-    Thread gameThread;
-    public ObjectPlacment oPlacer =  new ObjectPlacment(this);
+    TileManager tileM = new TileManager(this);
+    KeyHandler keyH = new KeyHandler(this);
     public UI ui = new UI(this);
-
+    public ObjectPlacment oPlacer =  new ObjectPlacment(this);
     public CollisionDetection cDetection = new CollisionDetection(this);
+    public EventHandler eHandler = new EventHandler(this);
+    Thread gameThread;
+    //entity
+    public Player player = new Player(this,keyH);
     public SuperObject obj[] = new SuperObject[10];// can display up to 10 objects
+    public ArrayList<Entity> projectileList = new ArrayList<>();
+    //gamestate
+    public int gameState;
+    public final int playState = 1;
+    public final int pauseState = 2;
 
 
     public PanelSettings() {
@@ -46,6 +54,7 @@ public class PanelSettings extends JPanel implements Runnable {
     public void setupGame(){
         oPlacer.setObject();
         playMusic(0);
+        gameState = playState;
     }
 
     public void startGameThread() {
@@ -88,7 +97,7 @@ public class PanelSettings extends JPanel implements Runnable {
                 drawcount ++;
                 nextDrawTime += drawInterval;
                 if (timer >= 1000000000) {
-                    System.out.println("FPS: " + fps);
+                    //System.out.println("FPS: " + fps);
                     drawcount = 0;
                     timer = 0;
                 }
@@ -100,14 +109,38 @@ public class PanelSettings extends JPanel implements Runnable {
         }
     }
     public void update() {
-        player.update();
+        if(gameState == playState) {
+            player.update();
+        }
+        if(gameState == pauseState) {
+
+        }
         tileM.update();
+        for (int i = 0; i < projectileList.size(); i++) {
+            if(projectileList.get(i) != null){
+
+                if(projectileList.get(i).alive){
+                    projectileList.get(i).update();
+                }
+                if(!projectileList.get(i).alive){
+                    projectileList.remove(i);
+                }
+            }
+        }
 
 
     }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+
+        //debug
+        long drawStart = 0;
+        if(keyH.debug){
+
+            drawStart = System.nanoTime();
+        }
+
 
         tileM.draw(g2);
 
@@ -121,6 +154,13 @@ public class PanelSettings extends JPanel implements Runnable {
 
 
         ui.draw(g2);
+        if(keyH.debug) {
+            long drawend = System.nanoTime();
+            long passed = drawend - drawStart;
+            g2.setColor(Color.BLACK);
+            g2.drawString("Draw time: " + passed, 10, 400);
+            System.out.println("Draw time: " + passed);
+        }
 
         g2.dispose();//saves memory
     }

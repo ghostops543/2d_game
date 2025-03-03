@@ -1,11 +1,17 @@
 package Main;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
-
-    public boolean upPressed, downPressed, leftPressed, rightPressed;// controls movement
+    PanelSettings gp;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, shoot;// controls movement
     public boolean inv1, inv2, inv3, inv4, inv5;//lets players move to there 5 inventory slots
+    public boolean debug, pause;
+
+    public KeyHandler(PanelSettings gp) {
+        this.gp = gp;
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {}
@@ -39,6 +45,26 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_5) {
             inv5 = true;
         }
+        if (code == KeyEvent.VK_SPACE) {
+            shoot = true;
+        }
+        if (code == KeyEvent.VK_P) {
+            if (!debug){
+                debug = true;
+            }
+            else if(debug){
+                debug = false;
+            }
+        }
+        if(code == KeyEvent.VK_ESCAPE){
+            if (gp.gameState == gp.playState){
+                gp.gameState = gp.pauseState;
+            }
+            else if (gp.gameState == gp.pauseState){
+                gp.gameState = gp.playState;
+            }
+        }
+
     }
     @Override
     public void keyReleased(KeyEvent e) {
@@ -69,6 +95,9 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_5) {
             inv5 = false;
+        }
+        if (code == KeyEvent.VK_SPACE) {
+            shoot = false;
         }
     }
 }

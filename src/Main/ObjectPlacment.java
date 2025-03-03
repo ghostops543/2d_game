@@ -10,7 +10,7 @@ public class ObjectPlacment {
     }
 
     public void setObject(){
-        gp.obj[0] = new OBJ_revolver();
+        gp.obj[0] = new OBJ_revolver(gp);
         gp.obj[0].worldx = 2 * gp.tileSize;
         gp.obj[0].worldy = 2 * gp.tileSize;
     }

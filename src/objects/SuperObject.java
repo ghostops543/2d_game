@@ -1,19 +1,21 @@
 package objects;
 
 import Main.PanelSettings;
+import Main.Tools;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class SuperObject {
 
-    public BufferedImage image;
+    public BufferedImage image, image1, image2, image3, image4, image5;
     public String name;
     public boolean collision;
     public int worldx, worldy;
     public Rectangle solidArea = new Rectangle(0,0,48,48);
     public int solidAreaDefaultx = 0;
     public int solidAreaDefaulty = 0;
+    Tools tool = new Tools();
 
     public void draw(Graphics2D g2, PanelSettings gp) {
         int screenx = worldx - gp.player.worldx + gp.player.screenx;

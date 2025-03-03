@@ -3,6 +3,8 @@ package entitys;
 
 import Main.KeyHandler;
 import Main.PanelSettings;
+import Main.Tools;
+import objects.OBJ_bullet;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -20,11 +22,14 @@ public class Player extends Entity {
     public final int screenx;
     public final int screeny;
     public int invNum;
+    boolean debug = false;
+    int stationary = 0;
 
 
 
 
     public Player(PanelSettings gp, KeyHandler keyH){
+        super(gp);
 
         this.gp = gp;
         this.keyH = keyH;
@@ -32,7 +37,7 @@ public class Player extends Entity {
         screenx = gp.screenWidth/2-(gp.tileSize/2);
         screeny = gp.screenHeight/2-(gp.tileSize/2);
 
-        solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
+        solidArea = new Rectangle(8, 0, gp.tileSize, gp.tileSize);
         solidAreaDefaultx = solidArea.x;
         solidAreaDefaulty = solidArea.y;
 
@@ -47,24 +52,35 @@ public class Player extends Entity {
         direction= "right";
         invNum = 1;
 
+        maxLife = 5;
+        life = maxLife;
+        coin = 0;
+        projectile = new OBJ_bullet(gp);
+
     }
     public void getPlayerImage(){//gets sprite info
+        up1 = setup("pixel shrimp u-1");
+        up2 = setup("pixel shrimp u-2");
+        down1 = setup("pixel shrimp d-1");
+        down2 = setup("pixel shrimp d-2");
+        left1 = setup("pixel shrimp l-1");
+        left2 = setup("pixel shrimp l-2");
+        right1 = setup("pixel shrimp r-1");
+        right2 = setup("pixel shrimp r-2");
+    }
+    public BufferedImage setup(String ImageName){
+        Tools tool = new Tools();
+        BufferedImage image = null;
+        try{
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/" + ImageName + ".png")));
+            image = tool.scaleImage(image, gp.tileSize, gp.tileSize);
 
-        try {
-            up1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/pixel shrimp u-1.png")));
-            up2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/pixel shrimp u-2.png")));
-            down1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/pixel shrimp d-1.png")));
-            down2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/pixel shrimp d-2.png")));
-            left1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/pixel shrimp l-1.png")));
-            left2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/pixel shrimp l-2.png")));
-            right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/pixel shrimp r-1.png")));
-            right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/pixel shrimp r-2.png")));
         }catch (IOException e){
             e.printStackTrace();
         }
+        return image;
 
     }
-
     public void update() {
         if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {// stops sprite moving when stationary
             spriteCounter++;//sprite updater
@@ -80,29 +96,21 @@ public class Player extends Entity {
 
             if (keyH.upPressed) {
                 direction = "up";
-                solidArea.x = 4 * 3;//4 pixles x the scale
-                solidArea.y = 0;
-                solidArea.width = 32;
+                solidArea.width = 30;
                 solidArea.height = 48;
 
             } else if (keyH.downPressed) {
                 direction = "down";
-                solidArea.x = 4 * 3;//4 pixles x the scale
-                solidArea.y = 0;
-                solidArea.width = 24;
+                solidArea.width = 30;
                 solidArea.height = 48;
 
             } else if (keyH.leftPressed) {
                 direction = "left";
-                solidArea.x = 2 * 3;
-                solidArea.y = 2 * 3;
                 solidArea.width = 36;
                 solidArea.height = 36;
 
             } else if (keyH.rightPressed) {
                 direction = "right";
-                solidArea.x = 2 * 3;
-                solidArea.y = 2 * 3;
                 solidArea.width = 36;
                 solidArea.height = 36;
 
@@ -116,6 +124,9 @@ public class Player extends Entity {
             //check object collision
             int objIndex = gp.cDetection.checkObject(this, true);
             pickUpObject(objIndex);
+
+            //check event
+            gp.eHandler.checkEvent();
 
             //if collision is false player can move
             if (collisionOn == false) {
@@ -136,6 +147,13 @@ public class Player extends Entity {
                 }
             }
         }
+        else {
+            stationary++;
+            if(stationary == 20) {
+                spriteNum = 1;
+                stationary = 0;
+            }
+        }
         if(keyH.inv1){
             invNum = 1;
         }
@@ -150,6 +168,11 @@ public class Player extends Entity {
         }
         else if(keyH.inv5){
             invNum = 5;
+        }
+        if (keyH.shoot && !projectile.alive) {
+            projectile.set(worldx, worldy, direction, true, this);
+
+            gp.projectileList.add(projectile);
         }
 
 
@@ -230,6 +253,10 @@ public class Player extends Entity {
                 }
                 break;
         }
-        g2.drawImage(image, screenx, screeny,gp.tileSize, gp.tileSize, null);
+        g2.drawImage(image, screenx, screeny, null);
+        if(keyH.debug) {
+            g2.setColor(Color.red);
+            g2.drawRect(screenx + solidArea.x, screeny + solidArea.y, solidArea.width, solidArea.height);
+        }
     }
 }

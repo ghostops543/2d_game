@@ -1,9 +1,11 @@
 package tile;
 
 import Main.PanelSettings;
+import Main.Tools;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,33 +30,29 @@ public class TileManager extends Tile {
     }
 
     public void getTileImage() {
+        setup(0, "sand tile", false);
+        setup(1, "dungeon tile", false);
+        setup(2, "water tile", false);
+        setup(3, "water tile 2", false);
+        setup(4, "grass tile", false);
+        setup(5, "grass rock tile", true);
+        setup(6, "rock tile", true);
 
-        try {
 
-            tile[0] = new Tile();
-                tile[0].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/sand tile.png")));
-            tile[1] = new Tile();
-                tile[1].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/dungeon tile.png")));
-            tile[2] = new Tile();
-            if (tileSpriteNum == 1) {
-                tile[2].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/water tile.png")));
-            }
-            else if (tileSpriteNum == 2) {
-                tile[2].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/water tile 2.png")));
-            }
-            tile[3] = new Tile();
-            tile[3].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/rock tile.png")));
-            tile[3].collision = true;
+    }
 
-            tile[4] = new Tile();
-            tile[4].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/grass tile.png")));
+    public void setup(int index, String imageName, boolean collision) {
+        Tools tool = new Tools();
+        try{
+            tile[index]=new Tile();
+            tile[index].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/" + imageName + ".png")));
+            tile[index].image = tool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
+            tile[index].collision = collision;
 
-            tile[5] = new Tile();
-            tile[5].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/tiles/grass rock tile.png")));
-            tile[5].collision = true;
-        } catch (IOException e) {
+        }catch (IOException e){
             e.printStackTrace();
         }
+
     }
     public void loadMap() {
             try {
