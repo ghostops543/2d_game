@@ -1,4 +1,5 @@
 package Main;
+import entitys.Entity;
 import entitys.Player;
 import objects.SuperObject;
 import tile.TileManager;
@@ -18,8 +19,6 @@ public class PanelSettings extends JPanel implements Runnable {
     //world settings
     public final int maxWorldCol = 64;
     public final int maxWorldRow = 48;
-    public final int WorldWidth = tileSize * maxWorldCol;
-    public final int WorldHeight = tileSize * maxWorldRow;
 
     //fps
     int fps = 60;
@@ -27,8 +26,12 @@ public class PanelSettings extends JPanel implements Runnable {
     KeyHandler keyH = new KeyHandler();
     public Player player = new Player(this,keyH);
     TileManager tileM = new TileManager(this);
+    Sound music = new Sound();
+    Sound SE = new Sound();
     Thread gameThread;
     public ObjectPlacment oPlacer =  new ObjectPlacment(this);
+    public UI ui = new UI(this);
+
     public CollisionDetection cDetection = new CollisionDetection(this);
     public SuperObject obj[] = new SuperObject[10];// can display up to 10 objects
 
@@ -42,6 +45,7 @@ public class PanelSettings extends JPanel implements Runnable {
     }
     public void setupGame(){
         oPlacer.setObject();
+        playMusic(0);
     }
 
     public void startGameThread() {
@@ -104,6 +108,7 @@ public class PanelSettings extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+
         tileM.draw(g2);
 
         for (SuperObject superObject : obj) {
@@ -114,6 +119,21 @@ public class PanelSettings extends JPanel implements Runnable {
 
         player.draw(g2);
 
+
+        ui.draw(g2);
+
         g2.dispose();//saves memory
+    }
+    public void playMusic(int i) {
+        music.setFile(i);
+        music.playSound();
+        music.loopSound();
+    }
+    public void stopMusic() {
+        music.stopSound();
+    }
+    public void playSoundEffect(int i){
+        SE.setFile(i);
+        SE.playSound();
     }
 }

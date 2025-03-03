@@ -19,6 +19,9 @@ public class Player extends Entity {
 
     public final int screenx;
     public final int screeny;
+    public int invNum;
+
+
 
 
     public Player(PanelSettings gp, KeyHandler keyH){
@@ -42,6 +45,8 @@ public class Player extends Entity {
         worldy = gp.tileSize * 32;
         speed = 8;
         direction= "right";
+        invNum = 1;
+
     }
     public void getPlayerImage(){//gets sprite info
 
@@ -102,12 +107,14 @@ public class Player extends Entity {
                 solidArea.height = 36;
 
             }
+
+
             //check tile collision
             collisionOn = false;
             gp.cDetection.checkTile(this);
 
             //check object collision
-            int objIndex = gp.cDetection.checkObject(this,true);
+            int objIndex = gp.cDetection.checkObject(this, true);
             pickUpObject(objIndex);
 
             //if collision is false player can move
@@ -128,15 +135,51 @@ public class Player extends Entity {
                         break;
                 }
             }
+        }
+        if(keyH.inv1){
+            invNum = 1;
+        }
+        else if(keyH.inv2){
+            invNum = 2;
+        }
+        else if(keyH.inv3){
+            invNum = 3;
+        }
+        else if(keyH.inv4){
+            invNum = 4;
+        }
+        else if(keyH.inv5){
+            invNum = 5;
+        }
+
 
         }
-    }
+
     public void pickUpObject(int index) {
+
         if (index != 999) {
+
             String objectName = gp.obj[index].name;
 
-            switch (objectName) {
+            switch(objectName) {
                 case "revolver":
+                    switch(invNum) {
+                        case 1:
+                            inventory[0] = ("revolver");
+                            break;
+                        case 2:
+                            inventory[1] = ("revolver");
+                            break;
+                        case 3:
+                            inventory[2] = ("revolver");
+                            break;
+                        case 4:
+                            inventory[3] = ("revolver");
+                            break;
+                        case 5:
+                            inventory[4] = ("revolver");
+                            break;
+                    }
                     gp.obj[index] = null;
                     break;
                 case "chest":
