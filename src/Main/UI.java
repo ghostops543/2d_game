@@ -20,6 +20,7 @@ public class UI {
     BufferedImage heart0, heart1, heart2,heart3, heart4, heart5;
     BufferedImage inv_frame;
     BufferedImage inv_frame_hover;
+    public int invHov;
     public UI(PanelSettings gp) {
         this.gp = gp;
         serif_20 = new Font("Serif", Font.BOLD, 20);
@@ -84,9 +85,11 @@ public class UI {
                     break;
                 case 3:
                     g2.drawImage(inv_frame_hover, 115, 25, gp.tileSize, gp.tileSize, null);
+
                     break;
                 case 4:
                     g2.drawImage(inv_frame_hover, 165, 25, gp.tileSize, gp.tileSize, null);
+
                     break;
                 case 5:
                     g2.drawImage(inv_frame_hover, 215, 25, gp.tileSize, gp.tileSize, null);

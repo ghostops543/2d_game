@@ -12,9 +12,9 @@ public class OBJ_bullet extends Projectile {
         super(gp);
         this.gp = gp;
 
-        name = "fireball";
-        velocity = 5;
-        fireDistance = 80;
+        name = "bullet";
+        velocity = 10;
+        fireDistance = 100;
         life = maxLife;
         attackDamage = 2;
         alive = false;

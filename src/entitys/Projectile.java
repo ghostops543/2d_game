@@ -4,9 +4,11 @@ import Main.PanelSettings;
 
 public class Projectile extends Entity{
     Entity user;
+
     public Projectile(PanelSettings gp){
         super(gp);
     }
+
     public void set(int worldx, int worldy, String direction, boolean alive, Entity user){
 
         this.worldx = worldx;
@@ -14,7 +16,7 @@ public class Projectile extends Entity{
         this.direction = direction;
         this.alive = alive;
         this.user = user;
-        this.life = this.maxLife;
+        this.life = this.fireDistance;
 
     }
     public void update(){

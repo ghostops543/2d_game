@@ -21,6 +21,7 @@ public class Player extends Entity {
 
     public final int screenx;
     public final int screeny;
+    public int itemx, itemy;
     public int invNum;
     boolean debug = false;
     int stationary = 0;
@@ -59,20 +60,21 @@ public class Player extends Entity {
 
     }
     public void getPlayerImage(){//gets sprite info
-        up1 = setup("pixel shrimp u-1");
-        up2 = setup("pixel shrimp u-2");
-        down1 = setup("pixel shrimp d-1");
-        down2 = setup("pixel shrimp d-2");
-        left1 = setup("pixel shrimp l-1");
-        left2 = setup("pixel shrimp l-2");
-        right1 = setup("pixel shrimp r-1");
-        right2 = setup("pixel shrimp r-2");
+        up1 = setup("player/pixel shrimp u-1");
+        up2 = setup("player/pixel shrimp u-2");
+        down1 = setup("player/pixel shrimp d-1");
+        down2 = setup("player/pixel shrimp d-2");
+        left1 = setup("player/pixel shrimp l-1");
+        left2 = setup("player/pixel shrimp l-2");
+        right1 = setup("player/pixel shrimp r-1");
+        right2 = setup("player/pixel shrimp r-2");
+
     }
     public BufferedImage setup(String ImageName){
         Tools tool = new Tools();
         BufferedImage image = null;
         try{
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/" + ImageName + ".png")));
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/" + ImageName + ".png")));
             image = tool.scaleImage(image, gp.tileSize, gp.tileSize);
 
         }catch (IOException e){
@@ -218,6 +220,16 @@ public class Player extends Entity {
 
         switch(direction){
             case "up":
+                for(int i = 0; i < inventory.length; i++){
+                    if (inventory[i] != null) {
+
+                        if (inventory[invNum-1] != null) {//checks if inventory index contatins
+                            System.out.println(invNum);
+                            holdItem = setup("objects/"+inventory[invNum-1]);//sets item as inventory item
+                            // holdItem = setup("res/objects/"+inventory[invNum]+".png");
+                        }
+                    }
+                }
                 if(spriteNum == 1){
                     image = up1;
                 }
@@ -227,6 +239,7 @@ public class Player extends Entity {
                 break;
 
             case "down":
+
                 if(spriteNum == 1){
                     image = down1;
                 }
@@ -254,6 +267,7 @@ public class Player extends Entity {
                 break;
         }
         g2.drawImage(image, screenx, screeny, null);
+        g2.drawImage(holdItem, screenx, screeny, null);
         if(keyH.debug) {
             g2.setColor(Color.red);
             g2.drawRect(screenx + solidArea.x, screeny + solidArea.y, solidArea.width, solidArea.height);

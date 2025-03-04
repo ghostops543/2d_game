@@ -38,6 +38,7 @@ public class PanelSettings extends JPanel implements Runnable {
     public Player player = new Player(this,keyH);
     public SuperObject obj[] = new SuperObject[10];// can display up to 10 objects
     public ArrayList<Entity> projectileList = new ArrayList<>();
+    ArrayList<Entity> entityList = new ArrayList<>();
     //gamestate
     public int gameState;
     public final int playState = 1;
@@ -161,7 +162,19 @@ public class PanelSettings extends JPanel implements Runnable {
             g2.drawString("Draw time: " + passed, 10, 400);
             System.out.println("Draw time: " + passed);
         }
+        entityList.add(player);
+        for(int i = 0; i < projectileList.size(); i++){
+            if(projectileList.get(i) != null){
+                entityList.add(projectileList.get(i));
+            }
+        }
+        for(int i = 0; i < entityList.size(); i++)
+        {
+            entityList.get(i).draw(g2);
+        }
 
+        //EMPTY ENTITY LIST
+        entityList.clear();
         g2.dispose();//saves memory
     }
     public void playMusic(int i) {
