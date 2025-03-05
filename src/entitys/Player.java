@@ -56,7 +56,6 @@ public class Player extends Entity {
         maxLife = 5;
         life = maxLife;
         coin = 0;
-        projectile = new OBJ_bullet(gp);
 
     }
     public void getPlayerImage(){//gets sprite info
@@ -171,10 +170,20 @@ public class Player extends Entity {
         else if(keyH.inv5){
             invNum = 5;
         }
-        if (keyH.shoot && !projectile.alive) {
-            projectile.set(worldx, worldy, direction, true, this);
 
-            gp.projectileList.add(projectile);
+        if (inventory[invNum-1] != null) {
+
+            if (inventory[invNum - 1] == "revolver") {
+                projectile = new OBJ_bullet(gp);
+
+            }
+        }
+        if (projectile != null){
+            if (keyH.shoot && !projectile.alive) {
+                projectile.set(worldx, worldy, direction, true, this);
+
+                gp.projectileList.add(projectile);
+            }
         }
 
 
