@@ -16,10 +16,22 @@ public class Projectile extends Entity{
         this.direction = direction;
         this.alive = alive;
         this.user = user;
-        this.life = this.fireDistance;
+        this.life = fireDistance;
 
     }
     public void update(){
+
+        if(user == gp.player){
+            int monsterIndex = gp.cDetection.checkEntity(this,gp.monster);
+            if(monsterIndex != 999){
+                gp.player.damageMonster(monsterIndex, this, attackDamage);
+                alive = false;
+            }
+        }
+        if(user != gp.player){
+
+        }
+
         switch(direction){
             case "up": worldy -= velocity; break;
             case "down": worldy += velocity; break;

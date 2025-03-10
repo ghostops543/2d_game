@@ -15,14 +15,14 @@ import java.util.Objects;
 public class TileManager extends Tile {
     PanelSettings gp;
     public Tile[] tile;
-     public int mapTileNum[] [];
+     public int mapTileNum[][][];
 
     public TileManager(PanelSettings gp) {
         this.gp = gp;
 
         tile = new Tile[10];
 
-        mapTileNum = new  int [gp.maxWorldCol][gp.maxWorldRow];
+        mapTileNum = new  int [gp.maxMap][gp.maxWorldCol][gp.maxWorldRow];
 
         getTileImage();
         loadMap();
@@ -69,7 +69,7 @@ public class TileManager extends Tile {
 
                         int num = Integer.parseInt(numbers[col]);
 
-                        mapTileNum[col][row] = num;
+                        mapTileNum[0][col][row] = num;
                         col++;
                     }
                     if (col == gp.maxWorldCol) {
@@ -104,7 +104,7 @@ public class TileManager extends Tile {
     public void draw(Graphics2D g2) {
             for (int worldcol = 0; worldcol < gp.maxWorldCol; worldcol++) {
                 for (int worldrow = 0; worldrow < gp.maxWorldRow; worldrow++) {
-                    int tileNum = mapTileNum[worldcol][worldrow];
+                    int tileNum = mapTileNum[gp.currentMap][worldcol][worldrow];
                     int screenx = (worldcol * gp.tileSize) - gp.player.worldx + gp.player.screenx;
                     int screeny = (worldrow * gp.tileSize) - gp.player.worldy + gp.player.screeny;
                     if(((worldcol + gp.tileSize) * gp.tileSize) > gp.player.worldx - gp.player.screenx//only renders tile in player screen

@@ -2,7 +2,6 @@ package entitys;
 
 import Main.PanelSettings;
 import Main.Tools;
-import tile.Tile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -13,6 +12,8 @@ import java.util.Objects;
 public class Entity {
     PanelSettings gp;
     public int worldx, worldy;
+    public boolean invincibility= false;
+
 
     //item attributes
     public int attackDamage;
@@ -28,28 +29,69 @@ public class Entity {
     public int speed;
     public int maxLife;
     public int life;
+    public int defense= 0;
     public int coin;
+    public int exp;
+    public int nextLevelExp;
+    public int level;
     public boolean alive = true;
     public Entity currentWeapon;
+    public Entity currentArmor;
     public Projectile projectile;
-
+    public boolean canShoot;
+    public boolean dying = false;
     public boolean attacking;
+    public boolean collision = false;
+    public String direction ="down";
+
+
+    String dialogues[] = new String[20];
+    int dialogueIndex = 0;
+    public BufferedImage image, image1, image2, image3, image4, image5;
 
 
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
+    public BufferedImage attackUp1, attackUp2, attackDown1, attackDown2,
+            attackRight1, attackRight2, attackLeft1, attackLeft2;
     public BufferedImage holdItem;
-    public String direction;
 
-    public int spriteCounter = 0;
+
     public int spriteNum = 1;
+    boolean hpBarOn=false;
 
-    public Rectangle solidArea;
+    public Rectangle solidArea= new Rectangle(0,0,48,48);
+    public Rectangle attackArea = new Rectangle(0,0,0,0);
     public int solidAreaDefaultx, solidAreaDefaulty;
     public boolean collisionOn = false;
-    public String[] inventory = new String[5];
+    public String[] hotbar = new String[5];
+    //counters
+    public int antiFidgetSpin;
+    public int invincibleCount = 0;
+    public int spriteCounter = 0;
+    int dyingCounter = 0;
+    int hpBarCounter = 0;
+    int fireBuffer=0;
+
+    //type
+    public int type;
+    public final int type_monster = 2;
 
     public Entity(PanelSettings gp) {
         this.gp = gp;
+    }
+
+    public BufferedImage setup(String ImageName, int width, int height){
+        Tools tool = new Tools();
+        BufferedImage image = null;
+        try{
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/" + ImageName + ".png")));
+            image = tool.scaleImage(image, width, height);
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return image;
+
     }
 
     public int getScreenX() {
@@ -57,120 +99,201 @@ public class Entity {
         int screenx = worldx - gp.player.worldx + gp.player.screenx;
         return screenx;
     }
-
     public int getScreenY() {
         int screeny = worldy - gp.player.worldy + gp.player.screeny;
         return screeny;
     }
-
-    public void update() {
-    }
-
-    public BufferedImage setup(String imagePath, int width, int height) {
-        Tools uTool = new Tools();
-        BufferedImage image = null;
-
-        try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(imagePath + ".png")));
-            image = uTool.scaleImage(image, width, height);   //it scales to tilesize , will fix for player attack(16px x 32px) by adding width and height
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void move(){}
+    public void damageReaction(){}
+    public void speak(){}
+    public void checkCollision(){
+        collisionOn = false;
+        gp.cDetection.checkTile(this);
+        gp.cDetection.checkObject(this, false);
+        gp.cDetection.checkEntity(this, gp.npc);
+        gp.cDetection.checkEntity(this, gp.monster);
+        boolean contactPlayer = gp.cDetection.checkPlayer(this);
+        if(this.type == type_monster && contactPlayer)
+        {
+            damagePlayer(attackDamage);
         }
-        return image;
     }
+    public void damagePlayer(int attackDamage){
+        if(!invincibility) {
+            int damage = attackDamage - gp.player.defense;
+            gp.player.life -= damage;
+            if (gp.player.life <= 0) {
+                gp.player.life = 0;
+            }
+            gp.player.invincibility = true;
+        }
+    }
+    public boolean use(Entity entity) {
+        return true;
+        //return "true" if you used the item and "false" if you failed to use it.
+    }
+    public void update() {
+        move();
+        checkCollision();
+
+        if (!collisionOn) {
+
+            switch (direction) {
+                case "up":
+                    worldy -= speed;
+                    break;
+                case "down":
+                    worldy += speed;
+                    break;
+                case "left":
+                    worldx -= speed;
+                    break;
+                case "right":
+                    worldx += speed;
+                    break;
+            }
+        }
+        spriteCounter++;//sprite updater
+        if (spriteCounter > 10) {
+            if (spriteNum == 1) {
+                spriteNum = 2;
+            } else if (spriteNum == 2) {
+                spriteNum = 1;
+            }
+            spriteCounter = 0;
+        }
+        if (invincibility) {
+            invincibleCount++;
+            if (invincibleCount > 40){
+                invincibility = false;
+                invincibleCount = 0;
+            }
+        }
+    }
+
 
     public void draw(Graphics2D g2) {
         BufferedImage image = null;
 
+
         int tempScreenX = getScreenX();
         int tempScreenY = getScreenY();
-        switch (direction) {
-            case "up":
-                if (!attacking) //Normal walking sprites
-                {
-                    if (spriteNum == 1) {
-                        image = up1;
-                    }
-                    if (spriteNum == 2) {
-                        image = up2;
-                    }
-                }
-                if (attacking)  //Attacking sprites
-                {
-                    tempScreenY = getScreenY() - up1.getHeight();    //Adjusted the player's position one tile to up. Explained why I did it at where I call attacking() in update().
-                    if (spriteNum == 1) {
-                        //image = attackUp1;
-                    }
-                    if (spriteNum == 2) {
-                       // image = attackUp2;
-                    }
-                }
-                break;
 
-            case "down":
-                if (!attacking) //Normal walking sprites
-                {
-                    if (spriteNum == 1) {
-                        image = down1;
-                    }
-                    if (spriteNum == 2) {
-                        image = down2;
-                    }
-                }
-                if (attacking)  //Attacking sprites
-                {
-                    if (spriteNum == 1) {
-                        //image = attackDown1;
-                    }
-                    if (spriteNum == 2) {
-                        //image = attackDown2;
-                    }
-                }
-                break;
+        int screenx = worldx - gp.player.worldx + gp.player.screenx;
+        int screeny = worldy - gp.player.worldy + gp.player.screeny;
 
-            case "left":
-                if (!attacking) //Normal walking sprites
-                {
-                    if (spriteNum == 1) {
-                        image = left1;
+        if(worldx > gp.player.worldx - gp.player.screenx//only renders tile in player screen
+                && worldx < gp.player.worldx + gp.player.screenx
+                && worldy  > gp.player.worldy - gp.player.screeny
+                && worldy  < gp.player.worldy + gp.player.screeny){
+            switch (direction) {
+                case "up":
+                    if (!attacking) //Normal walking sprites
+                    {
+                        if (spriteNum == 1) {
+                            image = up1;
+                        }
+                        if (spriteNum == 2) {
+                            image = up2;
+                        }
                     }
-                    if (spriteNum == 2) {
-                        image = left2;
-                    }
-                }
-                if (attacking)  //Attacking sprites
-                {
-                    tempScreenX = getScreenX() - up1.getWidth();    //Adjusted the player's position one tile left. Explained why I did it at where I call attacking() in update().
-                    if (spriteNum == 1) {
-                        //image = attackLeft1;
-                    }
-                    if (spriteNum == 2) {
-                       // image = attackLeft2;
-                    }
-                }
-                break;
+                    break;
 
-            case "right":
-                if (!attacking) //Normal walking sprites
-                {
-                    if (spriteNum == 1) {
-                        image = right1;
+                case "down":
+                    if (!attacking) //Normal walking sprites
+                    {
+                        if (spriteNum == 1) {
+                            image = down1;
+                        }
+                        if (spriteNum == 2) {
+                            image = down2;
+                        }
                     }
-                    if (spriteNum == 2) {
-                        image = right2;
+                    break;
+
+                case "left":
+                    if (!attacking) //Normal walking sprites
+                    {
+                        if (spriteNum == 1) {image = left1;}
+                        if (spriteNum == 2) {image = left2;}
                     }
+                    break;
+
+                case "right":
+                    if (!attacking) //Normal walking sprites
+                    {
+                        if (spriteNum == 1) {
+                            image = right1;
+                        }
+                        if (spriteNum == 2) {
+                            image = right2;
+                        }
+                    }
+                    break;
+            }
+            //monster hp
+            if (type == type_monster && hpBarOn) {
+                double oneScale = (double)gp.tileSize/maxLife;
+                double hpBarValue = oneScale * life;
+                g2.setColor(new Color(35,35,35));
+                g2.fillRoundRect(screenx-1, screeny-16, gp.tileSize+2,12, 25, 10 );
+                g2.setColor(new Color(255, 0, 80));
+                g2.fillRoundRect(screenx, screeny - 15, (int)hpBarValue, 10,25 ,10);
+                hpBarCounter++;
+                if (hpBarCounter >600){
+                    hpBarCounter = 0;
+                    hpBarOn = false;
                 }
-                if (attacking)  //Attacking sprites
-                {
-                    if (spriteNum == 1) {
-                        //image = attackRight1;
-                    }
-                    if (spriteNum == 2) {
-                        //image = attackRight2;
-                    }
+            }
+            if(invincibility){
+                hpBarOn = true;
+                hpBarCounter = 0;
+                if (invincibleCount % 5 == 0 || invincibleCount % 6 == 0|| invincibleCount % 7 == 0){
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
                 }
-                break;
+                else{
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+                }
+                if (name == "Squib" && invincibleCount < 20){
+                    speed = 10;
+                }
+                else {
+                    speed = 1;
+                }
+            }
+            if(dying){
+                dyingAnimation(g2);
+
+            }
+            //g2.drawImage(image, screenx, screeny, null);
+            g2.drawImage(image, screenx, screeny, gp.tileSize, gp.tileSize, null);
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+
         }
-        g2.drawImage(image, tempScreenX, tempScreenY, null);
     }
+    public void dyingAnimation(Graphics2D g2){
+        dyingCounter++;
+        if(dyingCounter <= 5){
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0f));
+        }
+        if(dyingCounter > 5 && dyingCounter <= 15){
+
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        }
+        if(dyingCounter > 15 && dyingCounter <= 25){
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0f));
+        }
+        if(dyingCounter > 25 && dyingCounter <= 35) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        }
+        if(dyingCounter > 35 && dyingCounter <= 40){
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0f));
+        }
+        if (dyingCounter > 40){
+            dying = false;
+            alive = false;
+            dyingCounter = 0;
+        }
+    }
+
 }

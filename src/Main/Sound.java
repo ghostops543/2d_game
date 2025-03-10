@@ -12,6 +12,7 @@ public class Sound {
 
     public Sound(){
         soundURL[0] = getClass().getResource("/res/sound/pistol shrimp theme.wav");
+        soundURL[1] = getClass().getResource("/res/sound/effects/gunshot.wav");
 
     }
     public void setFile(int i){

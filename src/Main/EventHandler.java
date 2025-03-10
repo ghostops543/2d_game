@@ -6,6 +6,7 @@ public class EventHandler {
     PanelSettings gp;
     Rectangle eventRect;
     int eventRecDefaultX, eventRecDefaultY;
+
     public EventHandler(PanelSettings gp) {
         this.gp = gp;
 
@@ -43,8 +44,13 @@ public class EventHandler {
     }
     public void damagePit(){
 //        gp.gameState = gameState;
-        gp.player.life -= 1;
-        System.out.println("dmg");
+        if (!gp.player.invincibility) {
+            gp.player.life -= 1;
+            gp.player.invincibility = true;
+            System.out.println("dmg");
+        }
+
     }
+
 }
 

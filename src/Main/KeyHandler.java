@@ -5,8 +5,8 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
     PanelSettings gp;
-    public boolean upPressed, downPressed, leftPressed, rightPressed, shoot;// controls movement
-    public boolean inv1, inv2, inv3, inv4, inv5;//lets players move to there 5 inventory slots
+    public boolean upPressed, downPressed, leftPressed, rightPressed, shoot, enterPressed;// controls movement
+    public boolean inv1, inv2, inv3, inv4, inv5;//lets players move to there 5 hotbar slots
     public boolean debug, pause;
 
     public KeyHandler(PanelSettings gp) {
@@ -18,6 +18,48 @@ public class KeyHandler implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
+        if (gp.gameState == gp.titleState) {
+            titleState(code);
+        }
+        else if (gp.gameState == gp.playState) {
+            playState(code);
+        }
+        else if (gp.gameState == gp.pauseState) {
+            pauseState(code);
+        }
+        else if (gp.gameState == gp.dialogueState) {
+            dialogueState(code);
+        }
+        else if (gp.gameState == gp.inventoryState) {
+            inventoryState(code);
+        }
+    }
+    public void titleState(int code) {
+        if (code == KeyEvent.VK_W) {
+            if (gp.ui.commandNum > 0) {
+                gp.ui.commandNum--;
+            }
+        }
+        if (code == KeyEvent.VK_S) {
+            if (gp.ui.commandNum < 2) {
+                gp.ui.commandNum++;
+            }
+        }
+        if(code == KeyEvent.VK_ENTER) {
+            if (gp.ui.commandNum == 0) {
+                gp.gameState = gp.playState;
+                gp.playMusic(0);
+            }
+            if (gp.ui.commandNum == 1) {
+                // later
+            }
+            if (gp.ui.commandNum == 2) {
+                System.exit(0);
+
+            }
+        }
+    }
+    public void playState(int code){
         if (code == KeyEvent.VK_W) {
             upPressed = true;
         }
@@ -29,6 +71,9 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_D) {
             rightPressed = true;
+        }
+        if (code == KeyEvent.VK_Q) {
+            gp.gameState = gp.inventoryState;
         }
         if (code == KeyEvent.VK_1) {
             inv1 = true;
@@ -49,22 +94,33 @@ public class KeyHandler implements KeyListener {
             shoot = true;
         }
         if (code == KeyEvent.VK_P) {
-            if (!debug){
+            if (!debug) {
                 debug = true;
-            }
-            else if(debug){
+            } else if (debug) {
                 debug = false;
             }
         }
-        if(code == KeyEvent.VK_ESCAPE){
-            if (gp.gameState == gp.playState){
-                gp.gameState = gp.pauseState;
-            }
-            else if (gp.gameState == gp.pauseState){
-                gp.gameState = gp.playState;
-            }
+        if (code == KeyEvent.VK_ENTER) {
+            enterPressed = true;
         }
-
+        if (code == KeyEvent.VK_ESCAPE) {
+            gp.gameState = gp.pauseState;
+        }
+    }
+    public void pauseState(int code){
+        if (code == KeyEvent.VK_ESCAPE) {
+            gp.gameState = gp.playState;
+        }
+    }
+    public void dialogueState(int code){
+        if (code == KeyEvent.VK_ENTER) {
+            gp.gameState = gp.playState;
+        }
+    }
+    public void inventoryState(int code){
+        if(code == KeyEvent.VK_Q || code == KeyEvent.VK_ENTER) {
+            gp.gameState = gp.playState;
+        }
     }
     @Override
     public void keyReleased(KeyEvent e) {
@@ -80,6 +136,9 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_D) {
             rightPressed = false;
+        }
+        if(code == KeyEvent.VK_ENTER) {
+            enterPressed = false;
         }
         if (code == KeyEvent.VK_1) {
             inv1 = false;

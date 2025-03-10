@@ -2,27 +2,30 @@ package objects;
 
 import Main.PanelSettings;
 import entitys.Entity;
+import entitys.Player;
 
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
-public class OBJ_revolver extends SuperObject{
-    PanelSettings gp;
+public class OBJ_revolver extends Entity {
     public OBJ_revolver(PanelSettings gp) {
-        this.gp = gp;
+        super(gp);
         name = "revolver";
-        int fireRate = 1;
-        int bulletCount = 1;
-        int magazineSize = 6;
-        double reloadTime= .8;
-        try{
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResource("/res/objects/revolver.png")));
-            tool.scaleImage(image, gp.tileSize, gp.tileSize);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        collision = true;
+        fireRate = 1;
+        bulletCount = 1;
+        magazineSize = 6;
+        reloadTime= .8;
+        attackDamage = 1;
+        velocity = 3;
+        down1 = setup("/objects/revolver",gp.tileSize, gp.tileSize);
+        collisionOn = true;
+    }
+    public boolean use( Player player) {
+
+        player.hotbar[player.invNum-1] = "revolver";
+        return true;
     }
 }
