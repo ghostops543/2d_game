@@ -119,11 +119,15 @@ public class Entity {
         }
     }
     public void damagePlayer(int attackDamage){
-        if(!invincibility) {
-            int damage = attackDamage - gp.player.defense;
-            gp.player.life -= damage;
-            if (gp.player.life <= 0) {
+        if(!gp.player.invincibility) {
+            int damage = attackDamage - gp.player.defense;;
+            System.out.println(damage);
+            System.out.println(attackDamage);
+            if ((gp.player.life - damage)<= 0) {
                 gp.player.life = 0;
+            }
+            else{
+                gp.player.life -= damage;
             }
             gp.player.invincibility = true;
         }
