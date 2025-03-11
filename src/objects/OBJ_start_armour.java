@@ -8,7 +8,7 @@ public class OBJ_start_armour extends Entity {
     public OBJ_start_armour(PanelSettings gp) {
         super(gp);
         this.gp = gp;
-        name = "start_armour";
+        name = "None";
         defense = 0;
 
     }

@@ -230,19 +230,50 @@ public class UI {
         g2.setColor(Color.WHITE);
         g2.setFont(g2.getFont().deriveFont(32f));
         int textx = framex + 20;
-        int texty = framey + gp.tileSize ;
+        int hotbarx = (gp.tileSize*5)+50;
+        int squareSize = 36;
+        int texty = framey + 20;
         final int lineHeight = 32;
+        //hotbar squares
+        drawInvWindow(hotbarx, texty, squareSize, squareSize);
+        texty += 10+squareSize;
+        drawInvWindow(hotbarx, texty, squareSize, squareSize);
+        texty += 10+squareSize;
+        drawInvWindow(hotbarx, texty, squareSize, squareSize);
+        texty += 10+squareSize;
+        drawInvWindow(hotbarx, texty, squareSize, squareSize);
+        texty += 10+squareSize;
+        drawInvWindow(hotbarx, texty, squareSize, squareSize);
+        //stats
+        int statsx = hotbarx + squareSize + 20;
+        int statWidth = 350;
+        int statHeight = texty-30;
+        texty = framey + 20;
+        drawInvWindow(statsx, texty, statWidth, statHeight);
+        //storage
 
-        g2.drawString("Inventory", framex + (gp.tileSize * 5)+12, texty);
-        texty += lineHeight;
-        g2.drawString("level", textx, texty);
-        texty += lineHeight;
-        g2.drawString("Current Armour", textx, texty);
-        texty += lineHeight;
-        g2.drawString("Current Weapon", textx, texty);
-        texty += lineHeight;
-        g2.drawString("Weapon Attack Damage", textx, texty);
-        texty += lineHeight;
+
+//        g2.setFont(g2.getFont().deriveFont(48f));
+//        g2.drawString("Inventory", getX("Inventory"), texty);
+//        texty += lineHeight+ 10;
+//        g2.setFont(g2.getFont().deriveFont(32f));
+//        g2.drawString("level: " + gp.player.level, textx, texty);
+//        texty += lineHeight;
+//        g2.drawString("armour: ", textx, texty);
+//        g2.setFont(g2.getFont().deriveFont(48f));
+//        g2.drawString(gp.player.currentArmor.name, getX(gp.player.currentArmor.name), texty);
+//        texty += lineHeight+ 10 ;
+//        g2.setFont(g2.getFont().deriveFont(32f));
+//        g2.drawString("defense: " + gp.player.currentArmor.defense, textx, texty);
+//        texty += lineHeight;
+//        g2.drawString("weapon: ", textx, texty);
+//        g2.setFont(g2.getFont().deriveFont(48f));
+//        g2.drawString(gp.player.currentWeapon.name, getX(gp.player.currentWeapon.name), texty);
+//        texty += lineHeight + 10;
+//        g2.setFont(g2.getFont().deriveFont(32f));
+//        g2.drawString("Damage: " + gp.player.currentWeapon.attackDamage, textx, texty);
+//        texty += lineHeight;
+
 
 
 
@@ -274,6 +305,13 @@ public class UI {
         g2.drawRoundRect(x+5, y+5, width-10, height-10, 25 , 25);
 
     }
+    public void drawInvWindow(int x, int y, int width, int height) {
+        Color c = new Color(255,255,255, 220);
+        g2.setColor(c);
+        g2.setStroke(new BasicStroke(2));
+        g2.drawRoundRect(x+2, y+2, width, height, 15 , 15);
+
+    }
     public void drawPauseScreen() {
         String text = "PAUSED";
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 96f));
@@ -281,8 +319,7 @@ public class UI {
         int y = gp.screenHeight / 2;
         g2.drawString(text, x, y);
         }
-    public void addMessage(String text)
-    {
+    public void addMessage(String text) {
         message.add(text);
         messageCounter.add(0);
     }
