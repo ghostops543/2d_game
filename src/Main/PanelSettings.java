@@ -5,13 +5,16 @@ import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
 
-public class PanelSettings extends JPanel implements Runnable {
+public class PanelSettings extends JPanel implements Runnable, MouseMotionListener {
     //screen settings
     final int originalTileSize = 16;// 16x16 tile
     final int scale = 3;//3 x
@@ -62,6 +65,7 @@ public class PanelSettings extends JPanel implements Runnable {
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);// better rendering performance
         this.addKeyListener(keyH);
+        addMouseMotionListener(this);
         this.setFocusable(true);
     }
 
@@ -128,6 +132,8 @@ public class PanelSettings extends JPanel implements Runnable {
     public void update() {
         if (gameState == playState) {
             player.update();
+            mouseDragged(this);
+            mouseMoved(this);
             for (int i = 0; i < npc[1].length; i++) {
                 if (npc[currentMap][i] != null) {
                     npc[currentMap][i].update();
@@ -138,7 +144,7 @@ public class PanelSettings extends JPanel implements Runnable {
                     if (monster[currentMap][i].alive && !monster[currentMap][i].dying) {
                         monster[currentMap][i].update();
                     }
-                    if (!monster[currentMap][i].alive ) {
+                    if (!monster[currentMap][i].alive) {
                         monster[currentMap][i] = null;
                     }
                 }
@@ -160,8 +166,12 @@ public class PanelSettings extends JPanel implements Runnable {
         tileM.update();
 
 
+    }
 
+    private void mouseMoved(PanelSettings gp) {
+    }
 
+    private void mouseDragged(PanelSettings gp) {
     }
 
     public void paintComponent(Graphics g) {
@@ -178,8 +188,7 @@ public class PanelSettings extends JPanel implements Runnable {
         if (gameState == titleState) {
             tileM.draw(g2);
             ui.draw(g2);
-        }
-        else{
+        } else {
             tileM.draw(g2);
 
             //adds player and other entitires to list
@@ -187,17 +196,17 @@ public class PanelSettings extends JPanel implements Runnable {
                 entityList.add(player);
             }
 
-            for(int i = 0; i < npc.length; i++) {
+            for (int i = 0; i < npc.length; i++) {
                 if (npc[currentMap][i] != null) {
                     entityList.add(npc[currentMap][i]);
                 }
             }
-            for(int i =0; i< obj.length; i++) {
+            for (int i = 0; i < obj.length; i++) {
                 if (obj[currentMap][i] != null) {
                     entityList.add(obj[currentMap][i]);
                 }
             }
-            for(int i =0; i< monster.length; i++) {
+            for (int i = 0; i < monster.length; i++) {
                 if (monster[currentMap][i] != null) {
                     entityList.add(monster[currentMap][i]);
                 }
@@ -212,7 +221,7 @@ public class PanelSettings extends JPanel implements Runnable {
 
                 @Override
                 public int compare(Entity e1, Entity e2) {
-                    int result = Integer.compare(e1.worldy,e2.worldy);
+                    int result = Integer.compare(e1.worldy, e2.worldy);
                     return result;
                 }
             });
@@ -251,6 +260,17 @@ public class PanelSettings extends JPanel implements Runnable {
     public void playSoundEffect(int i) {
         SE.setFile(i);
         SE.playSound();
+    }
+
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        System.out.println("mouseDragged" + e.getX() + "," + e.getY());
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        System.out.println("mouseDragged" + e.getX() + "," + e.getY());
     }
 }
 
