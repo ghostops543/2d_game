@@ -183,7 +183,9 @@ public class PanelSettings extends JPanel implements Runnable {
             tileM.draw(g2);
 
             //adds player and other entitires to list
-            entityList.add(player);
+            if (gameState != inventoryState) {
+                entityList.add(player);
+            }
 
             for(int i = 0; i < npc.length; i++) {
                 if (npc[currentMap][i] != null) {

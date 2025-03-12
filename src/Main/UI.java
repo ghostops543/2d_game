@@ -1,6 +1,7 @@
 package Main;
 
 import entitys.Entity;
+import entitys.Player;
 import objects.OBJ_Heart;
 import objects.OBJ_revolver;
 
@@ -28,6 +29,8 @@ public class UI {
     public String currentDialogue = "";
     public int commandNum = 0;
     public Entity npc;
+    public int[] invIndex= {0,0};
+
 
     public UI(PanelSettings gp) {
         this.gp = gp;
@@ -70,6 +73,7 @@ public class UI {
         }
         if (gp.gameState == gp.inventoryState) {
             drawInventory();
+            overlayInventory();
         }
     }
     public void drawHud(){
@@ -229,8 +233,8 @@ public class UI {
 
         g2.setColor(Color.WHITE);
         g2.setFont(g2.getFont().deriveFont(32f));
-        int textx = framex + 20;
-        int hotbarx = (gp.tileSize*5)+50;
+        int startx = framex + 20;
+        int hotbarx = (gp.tileSize*5)+60;
         int squareSize = 36;
         int texty = framey + 20;
         final int lineHeight = 32;
@@ -244,38 +248,88 @@ public class UI {
         drawInvWindow(hotbarx, texty, squareSize, squareSize);
         texty += 10+squareSize;
         drawInvWindow(hotbarx, texty, squareSize, squareSize);
+        //armour slot
+        drawInvWindow(startx , texty, squareSize, squareSize);
         //stats
-        int statsx = hotbarx + squareSize + 20;
+        int statsx = hotbarx + squareSize + 10;
         int statWidth = 350;
         int statHeight = texty-30;
         texty = framey + 20;
         drawInvWindow(statsx, texty, statWidth, statHeight);
+        // stats words
+        texty += lineHeight;
+        statsx += 20;
+        g2.setFont(g2.getFont().deriveFont(32f));
+        g2.drawString("level: " + gp.player.level, statsx, texty);
+        texty += lineHeight;
+        g2.drawString("Defense: " + gp.player.currentArmor.defense, statsx, texty);
+        texty += lineHeight;
+        g2.drawString("Coins: " + gp.player.coin, statsx, texty);
+        texty += lineHeight;
+        g2.drawString("Exp: " + gp.player.exp, statsx, texty);
+        //player view
+        int playerWidth = gp.tileSize * 4;
+        texty = framey + 20;
+        drawInvWindow(startx, texty, statHeight, statHeight);
+        g2.drawImage(gp.player.invPic,(statHeight/2)+ 20,(statHeight/2)+ 20, null);
         //storage
-
-
-//        g2.setFont(g2.getFont().deriveFont(48f));
-//        g2.drawString("Inventory", getX("Inventory"), texty);
-//        texty += lineHeight+ 10;
-//        g2.setFont(g2.getFont().deriveFont(32f));
-//        g2.drawString("level: " + gp.player.level, textx, texty);
-//        texty += lineHeight;
-//        g2.drawString("armour: ", textx, texty);
-//        g2.setFont(g2.getFont().deriveFont(48f));
-//        g2.drawString(gp.player.currentArmor.name, getX(gp.player.currentArmor.name), texty);
-//        texty += lineHeight+ 10 ;
-//        g2.setFont(g2.getFont().deriveFont(32f));
-//        g2.drawString("defense: " + gp.player.currentArmor.defense, textx, texty);
-//        texty += lineHeight;
-//        g2.drawString("weapon: ", textx, texty);
-//        g2.setFont(g2.getFont().deriveFont(48f));
-//        g2.drawString(gp.player.currentWeapon.name, getX(gp.player.currentWeapon.name), texty);
-//        texty += lineHeight + 10;
-//        g2.setFont(g2.getFont().deriveFont(32f));
-//        g2.drawString("Damage: " + gp.player.currentWeapon.attackDamage, textx, texty);
-//        texty += lineHeight;
+        //displays grid
+        squareSize += 5;
+        int storagey = 252 + 20 + squareSize;
+        int storagex = startx;
+        drawStorageWindow(storagex, storagey, squareSize, squareSize);
+        for(int i = 0; i < 4; i++){
+            storagex = startx;
+            for(int j = 0; j < 15; j++) {
+                drawStorageWindow(storagex, storagey, squareSize, squareSize);
+                storagex += squareSize;
+            }
+            storagey += squareSize;
+        }
 
 
 
+
+
+
+    }
+    public void overlayInventory(){
+        //going to insert inventory items and hotbar over the inventory hud
+        int xAdd = gp.tileSize ;
+        int yAdd = 41;
+        int y =315;
+        int x = gp.tileSize + 22;
+        Color c = new Color(105, 105, 105, 150);
+        if (invIndex[0] >=0) {
+            x += yAdd * invIndex[1];
+            y += yAdd * invIndex[0];
+            g2.setColor(c);
+            g2.fillRect(x, y, yAdd, yAdd);// yAdd is the same at storage rect size
+        } else if (invIndex[0] == -1 && invIndex[1] == 0) {
+            x = gp.tileSize+23;
+            y = gp.tileSize+24+(46*4);
+            g2.fillRoundRect(x, y, 34, 34, 15, 15);
+        } else if (invIndex[0] == -1 && invIndex[1] == 1) {
+            x = (gp.tileSize*5)+63;
+            y = (gp.tileSize * 5)+16;
+            g2.fillRoundRect(x,y,34,34,15,15);
+        } else if (invIndex[0] == -2 && invIndex[1] == 1) {
+            x = (gp.tileSize*5)+63;
+            y = (gp.tileSize * 4)+18;
+            g2.fillRoundRect(x,y,34,34,15,15);
+        } else if (invIndex[0] == -3 && invIndex[1] == 1) {
+            x = (gp.tileSize*5)+63;
+            y = (gp.tileSize * 3)+19;
+            g2.fillRoundRect(x,y,34,34,15,15);
+        } else if (invIndex[0] == -4 && invIndex[1] == 1) {
+            x = (gp.tileSize*5)+63;
+            y = (gp.tileSize * 2)+21;
+            g2.fillRoundRect(x,y,34,34,15,15);
+        } else if (invIndex[0] == -5 && invIndex[1] == 1) {
+            x = (gp.tileSize*5)+63;
+            y = gp.tileSize+23;
+            g2.fillRoundRect(x,y,34,34,15,15);
+        }
 
     }
     public void drawDialogueScreen(){
@@ -311,6 +365,12 @@ public class UI {
         g2.setStroke(new BasicStroke(2));
         g2.drawRoundRect(x+2, y+2, width, height, 15 , 15);
 
+    }
+    public void drawStorageWindow(int x, int y, int width, int height) {
+        Color c = new Color(100,100,100, 220);
+        g2.setColor(c);
+        g2.setStroke(new BasicStroke(2));
+        g2.drawRect(x+2, y+2, width, height);
     }
     public void drawPauseScreen() {
         String text = "PAUSED";

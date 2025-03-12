@@ -1,6 +1,7 @@
 package Main;
 
 import entitys.new_npc;
+import monster.MON_Crab;
 import monster.MON_Squib;
 import objects.OBJ_revolver;
 
@@ -35,7 +36,7 @@ public class ObjectPlacment {
         gp.monster[mapNum][2] = new MON_Squib(gp);
         gp.monster[mapNum][2].worldx = 32 * gp.tileSize;
         gp.monster[mapNum][2].worldy = 6 * gp.tileSize;
-        gp.monster[mapNum][3] = new MON_Squib(gp);
+        gp.monster[mapNum][3] = new MON_Crab(gp);
         gp.monster[mapNum][3].worldx = 32 * gp.tileSize;
         gp.monster[mapNum][3].worldy = 5 * gp.tileSize;
         gp.monster[mapNum][4] = new MON_Squib(gp);

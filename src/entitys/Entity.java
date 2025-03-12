@@ -7,6 +7,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Entity {
@@ -42,6 +43,8 @@ public class Entity {
     public boolean dying = false;
     public boolean attacking;
     public boolean collision = false;
+    public String[] hotbar = new String[5];
+    public ArrayList<Entity> inventory = new ArrayList<>();
     public String direction ="down";
 
 
@@ -50,7 +53,7 @@ public class Entity {
     public BufferedImage image, image1, image2, image3, image4, image5;
 
 
-    public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
+    public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2, invPic;
     public BufferedImage attackUp1, attackUp2, attackDown1, attackDown2,
             attackRight1, attackRight2, attackLeft1, attackLeft2;
     public BufferedImage holdItem;
@@ -63,7 +66,6 @@ public class Entity {
     public Rectangle attackArea = new Rectangle(0,0,0,0);
     public int solidAreaDefaultx, solidAreaDefaulty;
     public boolean collisionOn = false;
-    public String[] hotbar = new String[5];
     //counters
     public int antiFidgetSpin;
     public int invincibleCount = 0;
@@ -261,7 +263,7 @@ public class Entity {
                 if (name == "Squib" && invincibleCount < 20){
                     speed = 10;
                 }
-                else {
+                else if (name == "Squib" && invincibleCount > 20){
                     speed = 1;
                 }
             }

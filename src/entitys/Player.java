@@ -86,6 +86,7 @@ public class Player extends Entity {
         left2 = setup("player/pixel shrimp l-2",gp.tileSize, gp.tileSize);
         right1 = setup("player/pixel shrimp r-1",gp.tileSize, gp.tileSize);
         right2 = setup("player/pixel shrimp r-2",gp.tileSize, gp.tileSize);
+        invPic = setup("player/pixel shrimp r-1",gp.tileSize* 2, gp.tileSize*2);
     }
     public void getAttackImage(){
         attackUp1 = setup("player/weapon/shrimp_revolver_up1",gp.tileSize, gp.tileSize*2);

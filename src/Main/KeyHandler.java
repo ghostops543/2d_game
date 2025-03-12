@@ -120,6 +120,62 @@ public class KeyHandler implements KeyListener {
     public void inventoryState(int code){
         if(code == KeyEvent.VK_Q || code == KeyEvent.VK_ENTER) {
             gp.gameState = gp.playState;
+            gp.ui.invIndex[0] = 0;
+            gp.ui.invIndex[1] = 0;
+        }
+        if(code == KeyEvent.VK_W) {
+            if (gp.ui.invIndex[0]> -5) {
+                if (gp.ui.invIndex[0] <= -1) {
+                    if (gp.ui.invIndex[1] == 1) {
+                        gp.ui.invIndex[0]--;
+                    }
+                }
+                if(gp.ui.invIndex[0] == 0) {
+                    gp.ui.invIndex[1] = 0;
+                }
+                if (gp.ui.invIndex[0] > -1) {
+                    gp.ui.invIndex[0]--;
+                }
+
+                System.out.println( gp.ui.invIndex[0]+" "+ gp.ui.invIndex[1]);
+
+            }
+        }
+        if(code == KeyEvent.VK_S) {
+            if (gp.ui.invIndex[0]< 3) {
+                gp.ui.invIndex[0]++;
+                System.out.println( gp.ui.invIndex[0]+" "+ gp.ui.invIndex[1]);
+            }
+        }
+        if(code == KeyEvent.VK_A) {
+            if (gp.ui.invIndex[1] > 0) {
+                if (gp.ui.invIndex[0] >= -5 && gp.ui.invIndex[0] <= -1) {
+                    if (gp.ui.invIndex[0] == -1) {
+                        if (gp.ui.invIndex[1] > 0) {
+                            gp.ui.invIndex[1]--;
+                        }
+                    }
+                } else {
+                    gp.ui.invIndex[1]--;
+                }
+            }
+            System.out.println( gp.ui.invIndex[0]+" "+ gp.ui.invIndex[1]);
+        }
+        if(code == KeyEvent.VK_D) {
+            if (gp.ui.invIndex[1]< 14) {
+                if (gp.ui.invIndex[0] >= -5 && gp.ui.invIndex[0] <= -1) {
+                    if (gp.ui.invIndex[0] == -1) {
+                        if (gp.ui.invIndex[1] < 1) {
+                            gp.ui.invIndex[1]++;
+                        }
+                    }
+                }
+                else {
+                    gp.ui.invIndex[1]++;
+                }
+                System.out.println( gp.ui.invIndex[0]+" "+ gp.ui.invIndex[1]);
+
+            }
         }
     }
     @Override
