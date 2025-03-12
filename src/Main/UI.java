@@ -2,12 +2,15 @@ package Main;
 
 import entitys.Entity;
 import entitys.Player;
+import objects.HUD_crossHair;
 import objects.OBJ_Heart;
 import objects.OBJ_revolver;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -17,7 +20,7 @@ public class UI {
     PanelSettings gp;
     Graphics2D g2;
     Font serif_20;
-    BufferedImage revolver1;
+    BufferedImage item;
     BufferedImage heart0, heart1, heart2,heart3, heart4, heart5;
     BufferedImage inv_frame;
     BufferedImage inv_frame_hover;
@@ -30,14 +33,18 @@ public class UI {
     public int commandNum = 0;
     public Entity npc;
     public int[] invIndex= {0,0};
+    public int crossHairCounter = 0;
+    public int crossHairNum;
+    int spin=0;
+
 
 
     public UI(PanelSettings gp) {
         this.gp = gp;
         InputStream is = getClass().getResourceAsStream("/font/cambriab.ttf");
         serif_20 = new Font("Cambria", Font.PLAIN, 20);
-        Entity revolver = new OBJ_revolver(gp);
-        revolver1 = revolver.down1;
+
+
         Entity heart = new OBJ_Heart(gp);
         heart5=heart.image5;
         heart4=heart.image4;
@@ -57,10 +64,25 @@ public class UI {
     }
     public void draw(Graphics2D g2) {
         this.g2 = g2;
+        crossHairCounter++;
+        if (crossHairCounter < 60) {
+            crossHairNum = 0;
+        }
+        else if (crossHairCounter < 120) {
+            crossHairNum = 1;
+        }
+        else if (crossHairCounter < 180) {
+            crossHairNum = 2;
+        }
+        else {
+            crossHairCounter = 0;
+        }
+
         g2.setFont(serif_20);
         g2.setColor(Color.black);
         if (gp.gameState == gp.playState) {
            drawHud();
+           drawCrosshair();
         }
         if (gp.gameState == gp.pauseState) {
             drawPauseScreen();
@@ -75,8 +97,13 @@ public class UI {
             drawInventory();
             overlayInventory();
         }
+
+
+
     }
     public void drawHud(){
+        Entity revolver = new OBJ_revolver(gp);
+        item = revolver.down1;
         switch (gp.player.life) {
             case 0:
                 g2.drawImage(heart0, 15, 5, gp.tileSize * 5, gp.tileSize, null);
@@ -128,19 +155,19 @@ public class UI {
                 if (Objects.equals(gp.player.hotbar[i], "revolver")) {
                     switch (i) {
                         case 0:
-                            g2.drawImage(revolver1, 15, 25, gp.tileSize, gp.tileSize, null);
+                            g2.drawImage(item, 15, 25, gp.tileSize, gp.tileSize, null);
                             break;
                         case 1:
-                            g2.drawImage(revolver1, 65, 25, gp.tileSize, gp.tileSize, null);
+                            g2.drawImage(item, 65, 25, gp.tileSize, gp.tileSize, null);
                             break;
                         case 2:
-                            g2.drawImage(revolver1, 115, 25, gp.tileSize, gp.tileSize, null);
+                            g2.drawImage(item, 115, 25, gp.tileSize, gp.tileSize, null);
                             break;
                         case 3:
-                            g2.drawImage(revolver1, 165, 25, gp.tileSize, gp.tileSize, null);
+                            g2.drawImage(item, 165, 25, gp.tileSize, gp.tileSize, null);
                             break;
                         case 4:
-                            g2.drawImage(revolver1, 215, 25, gp.tileSize, gp.tileSize, null);
+                            g2.drawImage(item, 215, 25, gp.tileSize, gp.tileSize, null);
                             break;
                     }
                 }
@@ -157,7 +184,7 @@ public class UI {
         String text = "Pistol Shrimp";
         int x = getX(text);
         int y = gp.tileSize * 3;
-
+        int rectX =gp.screenWidth/2-200;
         g2.setColor(Color.BLACK);
         g2.drawString(text, x+5, y+5);
 
@@ -170,6 +197,12 @@ public class UI {
         text = "New Game";
         x = getX(text);
         y += gp.tileSize*4;
+
+        if(gp.mouseX >= rectX && gp.mouseX <= rectX+400){
+            if(gp.mouseY >= y+12-gp.tileSize && gp.mouseY <= y+12-gp.tileSize+40) {
+                commandNum = 0;
+            }
+        }
         if(commandNum == 0) {
             c = new Color(105, 105, 105, 150);
         }
@@ -177,7 +210,7 @@ public class UI {
             c = new Color(0, 0, 0, 200);
         }
         g2.setColor(c);
-        g2.fillRoundRect(gp.screenWidth/2-200, y+12-gp.tileSize, 400, 40, 35 , 35);
+        g2.fillRoundRect(rectX, y+12-gp.tileSize, 400, 40, 35 , 35);
         c = new Color(255,255,255, 220);
         g2.setColor(c);
         g2.setStroke(new BasicStroke(2));
@@ -190,6 +223,11 @@ public class UI {
         text = "Continue Game";
         x = getX(text);
         y += gp.tileSize;
+        if(gp.mouseX >= rectX && gp.mouseX <= rectX+400){
+            if(gp.mouseY >= y+12-gp.tileSize && gp.mouseY <= y+12-gp.tileSize+40) {
+                commandNum = 1;
+            }
+        }
         if(commandNum == 1) {
             c = new Color(105, 105, 105, 150);
         }
@@ -197,7 +235,7 @@ public class UI {
             c = new Color(0, 0, 0, 200);
         }
         g2.setColor(c);
-        g2.fillRoundRect(gp.screenWidth/2-200, y+12-gp.tileSize, 400, 40, 35 , 35);
+        g2.fillRoundRect(rectX, y+12-gp.tileSize, 400, 40, 35 , 35);
         c = new Color(255,255,255, 220);
         g2.setColor(c);
         g2.setStroke(new BasicStroke(2));
@@ -207,6 +245,11 @@ public class UI {
         text = "Exit";
         x = getX(text);
         y += gp.tileSize;
+        if(gp.mouseX >= rectX && gp.mouseX <= rectX+400){
+            if(gp.mouseY >= y+12-gp.tileSize && gp.mouseY <= y+12-gp.tileSize+40) {
+                commandNum = 2;
+            }
+        }
         if(commandNum == 2) {
             c = new Color(105, 105, 105, 150);
         }
@@ -214,7 +257,7 @@ public class UI {
             c = new Color(0, 0, 0, 200);
         }
         g2.setColor(c);
-        g2.fillRoundRect(gp.screenWidth/2-200, y+12-gp.tileSize, 400, 40, 35 , 35);
+        g2.fillRoundRect(rectX, y+12-gp.tileSize, 400, 40, 35 , 35);
         c = new Color(255,255,255, 220);
         g2.setColor(c);
         g2.setStroke(new BasicStroke(2));
@@ -238,18 +281,54 @@ public class UI {
         int squareSize = 36;
         int texty = framey + 20;
         final int lineHeight = 32;
-        //hotbar squares
+        //hotbar squares could be a loop but i didnt want to rewrite it ugh
         drawInvWindow(hotbarx, texty, squareSize, squareSize);
+        if (gp.mouseX >= hotbarx && gp.mouseX <= hotbarx + squareSize) {
+            if(gp.mouseY >= texty && gp.mouseY <= texty + squareSize) {
+                invIndex[0] = -5;
+                invIndex[1] = 1;
+            }
+        }
         texty += 10+squareSize;
         drawInvWindow(hotbarx, texty, squareSize, squareSize);
+        if (gp.mouseX >= hotbarx && gp.mouseX <= hotbarx + squareSize) {
+            if(gp.mouseY >= texty && gp.mouseY <= texty + squareSize) {
+                invIndex[0] = -4;
+                invIndex[1] = 1;
+            }
+        }
         texty += 10+squareSize;
         drawInvWindow(hotbarx, texty, squareSize, squareSize);
+        if (gp.mouseX >= hotbarx && gp.mouseX <= hotbarx + squareSize) {
+            if(gp.mouseY >= texty && gp.mouseY <= texty + squareSize) {
+                invIndex[0] = -3;
+                invIndex[1] = 1;
+            }
+        }
         texty += 10+squareSize;
         drawInvWindow(hotbarx, texty, squareSize, squareSize);
+        if (gp.mouseX >= hotbarx && gp.mouseX <= hotbarx + squareSize) {
+            if(gp.mouseY >= texty && gp.mouseY <= texty + squareSize) {
+                invIndex[0] = -2;
+                invIndex[1] = 1;
+            }
+        }
         texty += 10+squareSize;
         drawInvWindow(hotbarx, texty, squareSize, squareSize);
+        if (gp.mouseX >= hotbarx && gp.mouseX <= hotbarx + squareSize) {
+            if(gp.mouseY >= texty && gp.mouseY <= texty + squareSize) {
+                invIndex[0] = -1;
+                invIndex[1] = 1;
+            }
+        }
         //armour slot
         drawInvWindow(startx , texty, squareSize, squareSize);
+        if (gp.mouseX >= startx && gp.mouseX <= startx + squareSize) {
+            if(gp.mouseY >= texty && gp.mouseY <= texty + squareSize) {
+                invIndex[0] = -1;
+                invIndex[1] = 0;
+            }
+        }
         //stats
         int statsx = hotbarx + squareSize + 10;
         int statWidth = 350;
@@ -282,6 +361,12 @@ public class UI {
             storagex = startx;
             for(int j = 0; j < 15; j++) {
                 drawStorageWindow(storagex, storagey, squareSize, squareSize);
+                if (gp.mouseX >= storagex && gp.mouseX <= storagex + squareSize) {
+                    if(gp.mouseY >= storagey && gp.mouseY <= storagey + squareSize) {
+                        invIndex[0] = i;
+                        invIndex[1] = j;
+                    }
+                }
                 storagex += squareSize;
             }
             storagey += squareSize;
@@ -346,6 +431,34 @@ public class UI {
         for(String line : currentDialogue.split("\n")){
             g2.drawString(line, x , y);
             y+= 40;
+        }
+
+    }
+    public void drawCrosshair(){
+        Entity crossHair = new HUD_crossHair(gp);
+
+        if (crossHairNum ==0){
+            item = crossHair.image1;
+        } else if (crossHairNum ==1) {
+            item = crossHair.image2;
+        } else if (crossHairNum == 2) {
+            item = crossHair.image3;
+        }
+        System.out.println(gp.mouseMoving);
+        if (gp.mouseMoving) {
+            spin -= 3;
+            if (spin == -360) {
+                spin = 0;
+            }
+            g2.rotate(Math.toRadians(spin), gp.mouseX, gp.mouseY);
+            g2.drawImage(item, gp.mouseX - (gp.tileSize / 2), gp.mouseY - (gp.tileSize / 2), gp.tileSize, gp.tileSize, null);
+        }
+        else{
+            if (spin < 0){
+                spin += 3;
+            }
+            g2.rotate(Math.toRadians(spin), gp.mouseX, gp.mouseY);
+            g2.drawImage(item, gp.mouseX - (gp.tileSize / 2), gp.mouseY - (gp.tileSize / 2), gp.tileSize, gp.tileSize, null);
         }
 
     }

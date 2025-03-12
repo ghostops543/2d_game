@@ -51,8 +51,8 @@ public class Player extends Entity {
 
     }
     public void setDefaultValues() {
-        worldx = gp.tileSize * 24;
-        worldy = gp.tileSize * 32;
+        worldx = gp.tileSize * 5;
+        worldy = gp.tileSize * 2;
         speed = 8;
         direction = "right";
         invNum = 1;
@@ -101,26 +101,25 @@ public class Player extends Entity {
 
     public void update() {
 
-        if(attacking){
+        if (attacking) {
             attacking();
-        }
-        else if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed || keyH.enterPressed || keyH.shoot) {// stops sprite moving when stationary
+        } else if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed || keyH.enterPressed || keyH.shoot) {// stops sprite moving when stationary
             if (keyH.upPressed) {
-                 direction = "up";
-                 solidArea.width = 30;
-                 solidArea.height = 48;
-            }else if (keyH.downPressed) {
-                 direction = "down";
-                 solidArea.width = 30;
-                 solidArea.height = 48;
-            }else if (keyH.leftPressed) {
-                 direction = "left";
-                 solidArea.width = 36;
-                 solidArea.height = 36;
-            }else if (keyH.rightPressed) {
-                 direction = "right";
-                 solidArea.width = 36;
-                 solidArea.height = 36;
+                direction = "up";
+                solidArea.width = 30;
+                solidArea.height = 48;
+            } else if (keyH.downPressed) {
+                direction = "down";
+                solidArea.width = 30;
+                solidArea.height = 48;
+            } else if (keyH.leftPressed) {
+                direction = "left";
+                solidArea.width = 36;
+                solidArea.height = 36;
+            } else if (keyH.rightPressed) {
+                direction = "right";
+                solidArea.width = 36;
+                solidArea.height = 36;
             }
             //check object collision
             collisionOn = false;
@@ -180,10 +179,9 @@ public class Player extends Entity {
                     }
                 }
             }
-                //check tile collision
+            //check tile collision
 
-                //if collision is false player can move
-
+            //if collision is false player can move
 
 
             gp.keyH.enterPressed = false;
@@ -201,8 +199,7 @@ public class Player extends Entity {
             }
 
 
-
-            }
+        }
         if (invincibility) {
             invincibleCount++;
             if (invincibleCount >= 60) {
@@ -210,9 +207,9 @@ public class Player extends Entity {
                 invincibleCount = 0;
             }
         }
-        if (!canShoot){
+        if (!canShoot) {
             fireBuffer++;
-            if (fireBuffer> fireRate){
+            if (fireBuffer > fireRate) {
                 canShoot = true;
                 fireBuffer = 0;
             }

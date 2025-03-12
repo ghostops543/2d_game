@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 
-public class PanelSettings extends JPanel implements Runnable, MouseMotionListener {
+public class PanelSettings extends JPanel implements Runnable, MouseMotionListener, MouseListener {
     //screen settings
     final int originalTileSize = 16;// 16x16 tile
     final int scale = 3;//3 x
@@ -25,8 +25,8 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
     public final int screenHeight = tileSize * maxScreenRow;//576 pixels
 
     //world settings
-    public final int maxWorldCol = 64;
-    public final int maxWorldRow = 48;
+    public final int maxWorldCol = 14;
+    public final int maxWorldRow = 14;
     public final int maxMap = 10;
     public int currentMap = 0;
 
@@ -43,6 +43,12 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
     public CollisionDetection cDetection = new CollisionDetection(this);
     public EventHandler eHandler = new EventHandler(this);
     Thread gameThread;
+    //mouse handler
+    public int mouseX;
+    public int mouseY;
+    public boolean mouseMoving;
+    String mouseString;
+    int mouseCount = 0;
     //Map map = new Map(this);
     //entity
     public Player player = new Player(this, keyH);
@@ -66,6 +72,7 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
         this.setDoubleBuffered(true);// better rendering performance
         this.addKeyListener(keyH);
         addMouseMotionListener(this);
+        addMouseListener(this);
         this.setFocusable(true);
     }
 
@@ -132,8 +139,7 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
     public void update() {
         if (gameState == playState) {
             player.update();
-            mouseDragged(this);
-            mouseMoved(this);
+
             for (int i = 0; i < npc[1].length; i++) {
                 if (npc[currentMap][i] != null) {
                     npc[currentMap][i].update();
@@ -164,14 +170,15 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
 
         }
         tileM.update();
+        mouseCount++;
+        if(mouseCount > 20) {
+            mouseString = null;
+            mouseMoving = false;
+            mouseCount = 0;
+        }else {
+        }
 
 
-    }
-
-    private void mouseMoved(PanelSettings gp) {
-    }
-
-    private void mouseDragged(PanelSettings gp) {
     }
 
     public void paintComponent(Graphics g) {
@@ -265,12 +272,53 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        System.out.println("mouseDragged" + e.getX() + "," + e.getY());
+        mouseX = e.getX();
+        mouseY = e.getY();
+        System.out.println("draging");
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        System.out.println("mouseDragged" + e.getX() + "," + e.getY());
+        mouseX = e.getX();
+        mouseY = e.getY();
+        if(mouseString == null){
+            mouseCount=0;
+            mouseMoving = false;
+            mouseString= e.paramString();
+
+        }
+        else if(mouseString.contains("MOUSE_MOVED")){
+            mouseMoving = true;
+        }
+
+    }//if its not broken dont fix it
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+         System.out.println("mouse clicked at" + e.getX() + "," + e.getY());
+         mouseX = e.getX();
+         mouseY = e.getY();
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }
 

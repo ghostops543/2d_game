@@ -31,7 +31,7 @@ public class TileManager extends Tile {
 
     public void getTileImage() {
         setup(0, "sand tile", false);
-        setup(1, "dungeon tile", false);
+        setup(1, "dungeon tile", true);
         setup(2, "water tile", false);
         setup(3, "water tile 2", false);
         setup(4, "grass tile", false);
@@ -57,7 +57,7 @@ public class TileManager extends Tile {
     public void loadMap() {
             try {
 
-                InputStream is = Objects.requireNonNull(getClass().getResourceAsStream("/res/maps/map 1.txt"));
+                InputStream is = Objects.requireNonNull(getClass().getResourceAsStream("/res/maps/map 2.txt"));
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
                 int col = 0, row = 0;

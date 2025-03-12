@@ -58,7 +58,7 @@ public class Entity {
             attackRight1, attackRight2, attackLeft1, attackLeft2;
     public BufferedImage holdItem;
 
-
+    public int crossHairNum;
     public int spriteNum = 1;
     boolean hpBarOn=false;
 
@@ -175,6 +175,7 @@ public class Entity {
                 invincibleCount = 0;
             }
         }
+
     }
 
 
