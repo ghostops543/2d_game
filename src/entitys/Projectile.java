@@ -19,35 +19,32 @@ public class Projectile extends Entity{
         this.life = fireDistance;
 
     }
-    public void update(){
+    public void update() {
 
-        if(user == gp.player){
-            int monsterIndex = gp.cDetection.checkEntity(this,gp.monster);
-            if(monsterIndex != 999){
+        if (user == gp.player) {
+            int monsterIndex = gp.cDetection.checkEntity(this, gp.monster);
+            if (monsterIndex != 999) {
                 gp.player.damageMonster(monsterIndex, this, gp.player.currentWeapon.attackDamage);
                 alive = false;
             }
         }
-        if(user != gp.player){
+        if (user != gp.player) {
 
         }
+        worldy += gp.yDif* gp.player.currentWeapon.velocity;
+        worldx += gp.xDif* gp.player.currentWeapon.velocity;
+//        System.out.println(worldx + " " + worldy);
 
-        switch(direction){
-            case "up": worldy -= velocity; break;
-            case "down": worldy += velocity; break;
-            case "left": worldx -= velocity; break;
-            case "right": worldx += velocity; break;
-        }
+
         life--;
-        if(life <= 0){
+        if (life <= 0) {
             alive = false;
         }
         spriteCounter++;
-        if(spriteCounter > 12){
-            if(spriteNum == 1) {
+        if (spriteCounter > 12) {
+            if (spriteNum == 1) {
                 spriteNum = 2;
-            }
-            else if(spriteNum == 2) {
+            } else if (spriteNum == 2) {
                 spriteNum = 1;
             }
             spriteCounter = 0;

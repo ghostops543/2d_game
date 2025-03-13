@@ -225,8 +225,8 @@ public class Player extends Entity {
         if(spriteCounter>5 && spriteCounter <=25){
             spriteNum = 2;
 
-            int currentWorldx = worldx;
-            int currentWorldy = worldy;
+            int currentWorldx = (int) worldx;
+            int currentWorldy = (int) worldy;
             int solidAreaWidth = solidArea.width;
             int solidAreaHeight = solidArea.height;
 
@@ -270,13 +270,13 @@ public class Player extends Entity {
 
         }
         else{
-            if(gp.keyH.shoot){
+            if(gp.keyH.shoot|| gp.shoot){
                 if(hotbar[invNum-1] != null && canShoot) {
                     canShoot = false;
                     attacking = true;
                     gp.playSoundEffect(1);
                     projectile = new OBJ_bullet(gp);
-                    projectile.set(worldx, worldy, direction, true, this);
+                    projectile.set((int) worldx, (int) worldy, direction, true, this);
                     gp.projectileList.add(projectile);
 
 
@@ -288,7 +288,7 @@ public class Player extends Entity {
     public void damaged(int i){
         if (i != 999) {
             if(!invincibility) {
-                life -= 1;
+                life -= gp.monster[gp.currentMap][i].attackDamage ;
                 invincibility = true;
             }
         }

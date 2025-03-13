@@ -7,6 +7,7 @@ import objects.OBJ_Heart;
 import objects.OBJ_revolver;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -444,22 +445,34 @@ public class UI {
         } else if (crossHairNum == 2) {
             item = crossHair.image3;
         }
-        System.out.println(gp.mouseMoving);
-        if (gp.mouseMoving) {
-            spin -= 3;
-            if (spin == -360) {
-                spin = 0;
-            }
-            g2.rotate(Math.toRadians(spin), gp.mouseX, gp.mouseY);
-            g2.drawImage(item, gp.mouseX - (gp.tileSize / 2), gp.mouseY - (gp.tileSize / 2), gp.tileSize, gp.tileSize, null);
-        }
-        else{
+//        if (gp.mouseMoving) {
+//            spin -= 3;
+//            if (spin == -360) {
+//                spin = 0;
+//            }
+//            g2.rotate(Math.toRadians(spin), gp.mouseX, gp.mouseY);
+//
+//            Cursor c = Toolkit.getDefaultToolkit().createCustomCursor(item,new Point(0,0),"crosshair");
+//            gp.setCursor(c);
+//            //g2.drawImage(item, gp.mouseX - (gp.tileSize / 2), gp.mouseY - (gp.tileSize / 2), gp.tileSize, gp.tileSize, null);
+//        }
+//        else{
             if (spin < 0){
-                spin += 3;
+                if (spin % 12 == 0) {
+                    spin += 12;
+                }else if(spin % 9 == 0){
+                    spin += 9;
+                } else if (spin % 6 == 0) {
+                    spin += 6;
+                } else if (spin % 3 == 0) {
+                    spin += 3;
+                }
             }
             g2.rotate(Math.toRadians(spin), gp.mouseX, gp.mouseY);
-            g2.drawImage(item, gp.mouseX - (gp.tileSize / 2), gp.mouseY - (gp.tileSize / 2), gp.tileSize, gp.tileSize, null);
-        }
+            Cursor c = Toolkit.getDefaultToolkit().createCustomCursor(item,new Point(0,0),"crosshair");
+            gp.setCursor(c);
+            //g2.drawImage(item, gp.mouseX - (gp.tileSize / 2), gp.mouseY - (gp.tileSize / 2), gp.tileSize, gp.tileSize, null);
+
 
     }
     public void drawSubWindow(int x, int y, int width, int height) {

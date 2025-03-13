@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class Entity {
     PanelSettings gp;
-    public int worldx, worldy;
+    public double worldx, worldy;
     public boolean invincibility= false;
 
 
@@ -58,7 +58,6 @@ public class Entity {
             attackRight1, attackRight2, attackLeft1, attackLeft2;
     public BufferedImage holdItem;
 
-    public int crossHairNum;
     public int spriteNum = 1;
     boolean hpBarOn=false;
 
@@ -98,11 +97,11 @@ public class Entity {
 
     public int getScreenX() {
 
-        int screenx = worldx - gp.player.worldx + gp.player.screenx;
+        int screenx = (int) (worldx - gp.player.worldx + gp.player.screenx);
         return screenx;
     }
     public int getScreenY() {
-        int screeny = worldy - gp.player.worldy + gp.player.screeny;
+        int screeny = (int) (worldy - gp.player.worldy + gp.player.screeny);
         return screeny;
     }
     public void move(){}
@@ -186,8 +185,8 @@ public class Entity {
         int tempScreenX = getScreenX();
         int tempScreenY = getScreenY();
 
-        int screenx = worldx - gp.player.worldx + gp.player.screenx;
-        int screeny = worldy - gp.player.worldy + gp.player.screeny;
+        int screenx = (int) (worldx - gp.player.worldx + gp.player.screenx);
+        int screeny = (int) (worldy - gp.player.worldy + gp.player.screeny);
 
         if(worldx > gp.player.worldx - gp.player.screenx//only renders tile in player screen
                 && worldx < gp.player.worldx + gp.player.screenx

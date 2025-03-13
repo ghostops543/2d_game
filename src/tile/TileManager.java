@@ -105,8 +105,8 @@ public class TileManager extends Tile {
             for (int worldcol = 0; worldcol < gp.maxWorldCol; worldcol++) {
                 for (int worldrow = 0; worldrow < gp.maxWorldRow; worldrow++) {
                     int tileNum = mapTileNum[gp.currentMap][worldcol][worldrow];
-                    int screenx = (worldcol * gp.tileSize) - gp.player.worldx + gp.player.screenx;
-                    int screeny = (worldrow * gp.tileSize) - gp.player.worldy + gp.player.screeny;
+                    int screenx = (int) ((worldcol * gp.tileSize) - gp.player.worldx + gp.player.screenx);
+                    int screeny = (int) ((worldrow * gp.tileSize) - gp.player.worldy + gp.player.screeny);
                     if(((worldcol + gp.tileSize) * gp.tileSize) > gp.player.worldx - gp.player.screenx//only renders tile in player screen
                         && ((worldcol - gp.tileSize) * gp.tileSize) < gp.player.worldx + gp.player.screenx
                         && ((worldrow + gp.tileSize) * gp.tileSize) > gp.player.worldy - gp.player.screeny

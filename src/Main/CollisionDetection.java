@@ -13,10 +13,10 @@ public class CollisionDetection {
     }
     public void checkTile(Entity entity) {
 
-        int entityLeftWorldx= entity.worldx + entity.solidArea.x;
-        int entityRightWorldx= entity.worldx + entity.solidArea.x + entity.solidArea.width;
-        int entityTopWorldy= entity.worldy + entity.solidArea.y;
-        int entityBottomWorldy= entity.worldy + entity.solidArea.y + entity.solidArea.height;
+        int entityLeftWorldx= (int) (entity.worldx + entity.solidArea.x);
+        int entityRightWorldx= (int) (entity.worldx + entity.solidArea.x + entity.solidArea.width);
+        int entityTopWorldy= (int) (entity.worldy + entity.solidArea.y);
+        int entityBottomWorldy= (int) (entity.worldy + entity.solidArea.y + entity.solidArea.height);
 
         int entityLeftCol = entityLeftWorldx/gp.tileSize;
         int entityRightCol = entityRightWorldx/gp.tileSize;
@@ -67,11 +67,11 @@ public class CollisionDetection {
             for (int i = 0; i < gp.obj[0].length; i++) {
                 if (gp.obj[0][i] != null) {
                     //get solid area position
-                    entity.solidArea.x = entity.worldx + entity.solidArea.x;
-                    entity.solidArea.y = entity.worldy + entity.solidArea.y;
+                    entity.solidArea.x = (int) (entity.worldx + entity.solidArea.x);
+                    entity.solidArea.y = (int) (entity.worldy + entity.solidArea.y);
                     //get objects postition
-                    gp.obj[gp.currentMap][i].solidArea.x = gp.obj[gp.currentMap][i].worldx + gp.obj[gp.currentMap][i].solidArea.x;
-                    gp.obj[gp.currentMap][i].solidArea.y = gp.obj[gp.currentMap][i].worldy + gp.obj[gp.currentMap][i].solidArea.y;
+                    gp.obj[gp.currentMap][i].solidArea.x = (int) (gp.obj[gp.currentMap][i].worldx + gp.obj[gp.currentMap][i].solidArea.x);
+                    gp.obj[gp.currentMap][i].solidArea.y = (int) (gp.obj[gp.currentMap][i].worldy + gp.obj[gp.currentMap][i].solidArea.y);
 
                     switch (entity.direction) {
                         case "up":
@@ -109,11 +109,11 @@ public class CollisionDetection {
         for(int i = 0; i < target[1].length; i++) {
             if (target[gp.currentMap][i] != null) {
                 //get solid area position
-                entity.solidArea.x = entity.worldx + entity.solidArea.x;
-                entity.solidArea.y = entity.worldy + entity.solidArea.y;
+                entity.solidArea.x = (int) (entity.worldx + entity.solidArea.x);
+                entity.solidArea.y = (int) (entity.worldy + entity.solidArea.y);
                 //get objects postition
-                target[gp.currentMap][i].solidArea.x = target[gp.currentMap][i].worldx + target[gp.currentMap][i].solidArea.x;
-                target[gp.currentMap][i].solidArea.y = target[gp.currentMap][i].worldy + target[gp.currentMap][i].solidArea.y;
+                target[gp.currentMap][i].solidArea.x = (int) (target[gp.currentMap][i].worldx + target[gp.currentMap][i].solidArea.x);
+                target[gp.currentMap][i].solidArea.y = (int) (target[gp.currentMap][i].worldy + target[gp.currentMap][i].solidArea.y);
 
                 switch (entity.direction) {
                     case "up":
@@ -148,11 +148,11 @@ public class CollisionDetection {
         boolean contactPlayer = false;
 
         //get solid area position
-        entity.solidArea.x = entity.worldx + entity.solidArea.x;
-        entity.solidArea.y = entity.worldy + entity.solidArea.y;
+        entity.solidArea.x = (int) (entity.worldx + entity.solidArea.x);
+        entity.solidArea.y = (int) (entity.worldy + entity.solidArea.y);
         //get objects postition
-        gp.player.solidArea.x = gp.player.worldx + gp.player.solidArea.x;
-        gp.player.solidArea.y = gp.player.worldy + gp.player.solidArea.y;
+        gp.player.solidArea.x = (int) (gp.player.worldx + gp.player.solidArea.x);
+        gp.player.solidArea.y = (int) (gp.player.worldy + gp.player.solidArea.y);
 
         switch(entity.direction){
             case "up": entity.solidArea.y -= entity.speed;break;

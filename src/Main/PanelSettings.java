@@ -8,10 +8,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.*;
 
 
 public class PanelSettings extends JPanel implements Runnable, MouseMotionListener, MouseListener {
@@ -49,7 +48,14 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
     public boolean mouseMoving;
     String mouseString;
     int mouseCount = 0;
+    public boolean shoot;
     //Map map = new Map(this);
+    //shoot
+    public double yDif;
+    public double xDif;
+    public double b;
+    public int startx;
+    public int starty;
     //entity
     public Player player = new Player(this, keyH);
     public Entity obj[][] = new Entity[maxMap][10];// can display up to 10 objects
@@ -64,6 +70,7 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
     public final int pauseState = 2;
     public final int dialogueState = 3;
     public final int inventoryState = 4;
+
 
 
     public PanelSettings() {
@@ -171,7 +178,7 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
         }
         tileM.update();
         mouseCount++;
-        if(mouseCount > 20) {
+        if(mouseCount > 100) {
             mouseString = null;
             mouseMoving = false;
             mouseCount = 0;
@@ -228,7 +235,7 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
 
                 @Override
                 public int compare(Entity e1, Entity e2) {
-                    int result = Integer.compare(e1.worldy, e2.worldy);
+                    int result = Integer.compare((int) e1.worldy, (int) e2.worldy);
                     return result;
                 }
             });
@@ -272,24 +279,25 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        mouseX = e.getX();
-        mouseY = e.getY();
-        System.out.println("draging");
+//        mouseX = e.getX();
+//        mouseY = e.getY();
+//        System.out.println("draging");
+
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        mouseX = e.getX();
-        mouseY = e.getY();
-        if(mouseString == null){
-            mouseCount=0;
-            mouseMoving = false;
-            mouseString= e.paramString();
-
-        }
-        else if(mouseString.contains("MOUSE_MOVED")){
-            mouseMoving = true;
-        }
+//        mouseX = e.getX();
+//        mouseY = e.getY();
+//        if(mouseString == null){
+//            mouseCount=0;
+//            mouseMoving = false;
+//            mouseString= e.paramString();
+//
+//        }
+//        else if(mouseString.contains("MOUSE_MOVED")){
+//            mouseMoving = true;
+//        }
 
     }//if its not broken dont fix it
 
@@ -304,11 +312,31 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
          System.out.println("mouse clicked at" + e.getX() + "," + e.getY());
          mouseX = e.getX();
          mouseY = e.getY();
+         startx = (int) player.screenx;
+         starty = (int) player.screeny;
+
+         yDif = mouseY - starty;//y magnitude
+         xDif = mouseX - startx;//x magnitude
+         b = yDif / xDif;
+        double sd = Math.sqrt((yDif*yDif) + (xDif*xDif));
+//        System.out.println("mouseX: " + mouseX + ", mouseY: " + mouseY);
+//        System.out.println("startx: " + startx + ", starty: " + starty);
+//        System.out.println("xmagnitude: " + xDif+ " ymagnitude: " + yDif );
+        yDif = (yDif/ sd);
+        xDif = (xDif/ sd);
+        sd = Math.sqrt((yDif*yDif) + (xDif*xDif));
+//        System.out.println("b: " + b + ", sd: " + sd);
+//        System.out.println("xmagnitude normalize: " + xDif+ " ymagnitude normalized: " + yDif );
+//        System.out.println(xDif+yDif);
+        keyH.shoot = true;
+
+
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        keyH.shoot = false;
     }
 
     @Override
@@ -320,5 +348,6 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
     public void mouseExited(MouseEvent e) {
 
     }
+
 }
 

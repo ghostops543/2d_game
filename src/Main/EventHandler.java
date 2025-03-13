@@ -25,8 +25,8 @@ public class EventHandler {
     }
     public boolean hit(int eventCol, int eventRow, String reqDirection) {
         boolean hit = false;
-        gp.player.solidArea.x = gp.player.worldx + gp.player.solidArea.x;
-        gp.player.solidArea.y = gp.player.worldy + gp.player.solidArea.y;
+        gp.player.solidArea.x = (int) (gp.player.worldx + gp.player.solidArea.x);
+        gp.player.solidArea.y = (int) (gp.player.worldy + gp.player.solidArea.y);
         eventRect.x = eventCol * gp.tileSize + eventRect.x;
         eventRect.y = eventRow * gp.tileSize + eventRect.y;
 
