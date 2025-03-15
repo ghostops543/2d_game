@@ -18,8 +18,8 @@ public class OBJ_revolver extends Entity {
         bulletCount = 1;
         magazineSize = 6;
         reloadTime= .8;
-        attackDamage = 1;
-        velocity = 3;
+        attackDamage = 10;
+        velocity = 10;
         down1 = setup("/objects/revolver",gp.tileSize, gp.tileSize);
         collisionOn = true;
     }

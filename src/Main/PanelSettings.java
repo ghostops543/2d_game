@@ -24,8 +24,8 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
     public final int screenHeight = tileSize * maxScreenRow;//576 pixels
 
     //world settings
-    public final int maxWorldCol = 14;
-    public final int maxWorldRow = 14;
+    public final int maxWorldCol = 64;
+    public final int maxWorldRow = 48;
     public final int maxMap = 10;
     public int currentMap = 0;
 
@@ -279,6 +279,8 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
 
     @Override
     public void mouseDragged(MouseEvent e) {
+
+
 //        mouseX = e.getX();
 //        mouseY = e.getY();
 //        System.out.println("draging");

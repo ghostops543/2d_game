@@ -20,7 +20,7 @@ public class TileManager extends Tile {
     public TileManager(PanelSettings gp) {
         this.gp = gp;
 
-        tile = new Tile[10];
+        tile = new Tile[20];
 
         mapTileNum = new  int [gp.maxMap][gp.maxWorldCol][gp.maxWorldRow];
 
@@ -37,6 +37,17 @@ public class TileManager extends Tile {
         setup(4, "grass tile", false);
         setup(5, "grass rock tile", true);
         setup(6, "rock tile", true);
+        setup(7, "grass", false);
+        setup(8, "grass_flowers", false);
+        setup(9, "path", false);
+        setup(10, "path_t", false);
+        setup(11, "path_b", false);
+        setup(12, "path_l", false);
+        setup(13, "path_r", false);
+        setup(14, "path_tl_corner", false);
+        setup(15, "path_tr_corner", false);
+        setup(16, "path_bl_corner", false);
+        setup(17, "path_br_corner", false);
 
 
     }
@@ -57,7 +68,7 @@ public class TileManager extends Tile {
     public void loadMap() {
             try {
 
-                InputStream is = Objects.requireNonNull(getClass().getResourceAsStream("/res/maps/map 2.txt"));
+                InputStream is = Objects.requireNonNull(getClass().getResourceAsStream("/res/maps/map 1.txt"));
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
                 int col = 0, row = 0;

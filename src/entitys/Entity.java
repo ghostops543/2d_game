@@ -298,6 +298,7 @@ public class Entity {
         if (dyingCounter > 40){
             dying = false;
             alive = false;
+            gp.player.exp += exp;
             dyingCounter = 0;
         }
     }
