@@ -16,7 +16,5 @@ custom designed game engine. still very early in development
 - [@ghostops543](https://www.github.com/ghostops543)
 
 
-## Screenshots
 
-![App Screenshot](https://imgur.com/a/O1PB8IZ)
 
