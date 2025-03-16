@@ -14,16 +14,18 @@ public class OBJ_revolver extends Entity {
     public OBJ_revolver(PanelSettings gp) {
         super(gp);
         name = "revolver";
-        fireRate = 1;
-        bulletCount = 1;
+        fireRate = 4;
+        bulletCount = 10;
         magazineSize = 6;
+        ammoCost =1;
         reloadTime= .8;
         attackDamage = 10;
         velocity = 10;
         down1 = setup("/objects/revolver",gp.tileSize, gp.tileSize);
         collisionOn = true;
+        fireDistance=100;
     }
-    public boolean use( Player player) {
+    public boolean use(Player player) {
 
         player.hotbar[player.invNum-1] = "revolver";
         return true;

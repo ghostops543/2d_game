@@ -25,7 +25,7 @@ public class TileManager extends Tile {
         mapTileNum = new  int [gp.maxMap][gp.maxWorldCol][gp.maxWorldRow];
 
         getTileImage();
-        loadMap();
+        loadMap("/res/maps/map 1.txt");
 
     }
 
@@ -65,10 +65,10 @@ public class TileManager extends Tile {
         }
 
     }
-    public void loadMap() {
+    public void loadMap(String map) {
             try {
 
-                InputStream is = Objects.requireNonNull(getClass().getResourceAsStream("/res/maps/map 1.txt"));
+                InputStream is = Objects.requireNonNull(getClass().getResourceAsStream(map));
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
                 int col = 0, row = 0;

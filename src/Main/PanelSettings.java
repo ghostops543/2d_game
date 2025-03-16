@@ -1,6 +1,7 @@
 package Main;
 import entitys.Entity;
 import entitys.Player;
+import objects.OBJ_bullet;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -8,8 +9,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.*;
 
 
@@ -48,14 +47,18 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
     public boolean mouseMoving;
     String mouseString;
     int mouseCount = 0;
-    public boolean shoot;
+    public boolean shoot =false ;
+    public boolean mousepressed;
     //Map map = new Map(this);
     //shoot
     public double yDif;
     public double xDif;
+    public double monster_yDif;
+    public double monster_xDif;
     public double b;
     public int startx;
     public int starty;
+    public int fireRateCounter=1000;
     //entity
     public Player player = new Player(this, keyH);
     public Entity obj[][] = new Entity[maxMap][10];// can display up to 10 objects
@@ -70,7 +73,8 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
     public final int pauseState = 2;
     public final int dialogueState = 3;
     public final int inventoryState = 4;
-
+    //
+    int monsterCount;
 
 
     public PanelSettings() {
@@ -87,6 +91,7 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
         oPlacer.setObject();
         oPlacer.setNPC();
         oPlacer.setMonster();
+        monsterCount= monster[currentMap].length - 4;
         //playMusic(0);
         gameState = titleState;
     }
@@ -146,6 +151,18 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
     public void update() {
         if (gameState == playState) {
             player.update();
+            if (mousepressed) {
+                if (fireRateCounter >= player.currentWeapon.fireRate*5) {
+                    player.shoot();
+                    fireRateCounter=0;
+                }
+                fireRateCounter++;
+            }
+            if(monsterCount == 0){
+                oPlacer.setMonster();
+                monsterCount = monster[currentMap].length - 4;
+            }
+
 
             for (int i = 0; i < npc[1].length; i++) {
                 if (npc[currentMap][i] != null) {
@@ -158,6 +175,7 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
                         monster[currentMap][i].update();
                     }
                     if (!monster[currentMap][i].alive) {
+                        monsterCount--;
                         monster[currentMap][i] = null;
                     }
                 }
@@ -178,12 +196,14 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
         }
         tileM.update();
         mouseCount++;
-        if(mouseCount > 100) {
+        if (mouseCount > 100) {
             mouseString = null;
             mouseMoving = false;
             mouseCount = 0;
-        }else {
+        } else {
         }
+
+
 
 
     }
@@ -253,8 +273,18 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
                 long drawend = System.nanoTime();
                 long passed = drawend - drawStart;
                 g2.setColor(Color.BLACK);
-                g2.drawString("Draw time: " + passed, 10, 400);
-                System.out.println("Draw time: " + passed);
+                int x =10;
+                int y=400;
+                int lineHeight = 20;
+                g2.drawString("WorldX: "+ player.worldx, x, y);y += lineHeight;
+                g2.drawString("WorldY: "+ player.worldy, x, y);y += lineHeight;
+                g2.drawString("col: " + (player.worldx + player.solidArea.x)/tileSize, x, y);y += lineHeight;
+                g2.drawString("row: " + (player.worldy + player.solidArea.y)/tileSize, x, y);y += lineHeight;
+                g2.drawString("Draw time: " + passed, x, y);
+
+
+
+
             }
 
             g2.dispose();//saves memory
@@ -279,18 +309,33 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        mouseX = e.getX();
+        mouseY = e.getY();
+        startx = (int) player.screenx;
+        starty = (int) player.screeny;
 
-
-//        mouseX = e.getX();
-//        mouseY = e.getY();
-//        System.out.println("draging");
-
+        yDif = mouseY - starty;//y magnitude
+        xDif = mouseX - startx;//x magnitude
+        b = yDif / xDif;
+        double sd = Math.sqrt((yDif * yDif) + (xDif * xDif));
+        this.yDif = (yDif / sd);
+        this.xDif = (xDif / sd);
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-//        mouseX = e.getX();
-//        mouseY = e.getY();
+        mouseX = e.getX();
+        mouseY = e.getY();
+        startx = (int) player.screenx;
+        starty = (int) player.screeny;
+
+        yDif = mouseY - starty;//y magnitude
+        xDif = mouseX - startx;//x magnitude
+        b = yDif / xDif;
+        double sd = Math.sqrt((yDif * yDif) + (xDif * xDif));
+        this.yDif = (yDif / sd);
+        this.xDif = (xDif / sd);
+
 //        if(mouseString == null){
 //            mouseCount=0;
 //            mouseMoving = false;
@@ -301,48 +346,43 @@ public class PanelSettings extends JPanel implements Runnable, MouseMotionListen
 //            mouseMoving = true;
 //        }
 
-    }//if its not broken dont fix it
+    }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
-
+        mousepressed = false;
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-         System.out.println("mouse clicked at" + e.getX() + "," + e.getY());
-         mouseX = e.getX();
-         mouseY = e.getY();
-         startx = (int) player.screenx;
-         starty = (int) player.screeny;
+        mouseX = e.getX();
+        mouseY = e.getY();
+        startx = (int) player.screenx;
+        starty = (int) player.screeny;
+        mousepressed = true;
 
-         yDif = mouseY - starty;//y magnitude
-         xDif = mouseX - startx;//x magnitude
-         b = yDif / xDif;
-        double sd = Math.sqrt((yDif*yDif) + (xDif*xDif));
-//        System.out.println("mouseX: " + mouseX + ", mouseY: " + mouseY);
-//        System.out.println("startx: " + startx + ", starty: " + starty);
-//        System.out.println("xmagnitude: " + xDif+ " ymagnitude: " + yDif );
-        yDif = (yDif/ sd);
-        xDif = (xDif/ sd);
-        sd = Math.sqrt((yDif*yDif) + (xDif*xDif));
-//        System.out.println("b: " + b + ", sd: " + sd);
-//        System.out.println("xmagnitude normalize: " + xDif+ " ymagnitude normalized: " + yDif );
-//        System.out.println(xDif+yDif);
-        keyH.shoot = true;
+        yDif = mouseY - starty;//y magnitude
+        xDif = mouseX - startx;//x magnitude
+        double sd = Math.sqrt((yDif * yDif) + (xDif * xDif));
 
+        this.yDif = (yDif / sd);
+        this.xDif = (xDif / sd);
 
-
+//        player.shoot();
     }
+
+
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        keyH.shoot = false;
+        shoot = false;
+        mousepressed = false;
+        fireRateCounter=1000;
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
+
 
     }
 

@@ -77,18 +77,23 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_1) {
             inv1 = true;
+            gp.player.invNum = 1;
         }
         if (code == KeyEvent.VK_2) {
             inv2 = true;
+            gp.player.invNum = 2;
         }
         if (code == KeyEvent.VK_3) {
             inv3 = true;
+            gp.player.invNum = 3;
         }
         if (code == KeyEvent.VK_4) {
             inv4 = true;
+            gp.player.invNum = 4;
         }
         if (code == KeyEvent.VK_5) {
             inv5 = true;
+            gp.player.invNum = 5;
         }
         if (code == KeyEvent.VK_SPACE) {
             shoot = true;
@@ -100,8 +105,15 @@ public class KeyHandler implements KeyListener {
                 debug = false;
             }
         }
+        if(code == KeyEvent.VK_M){
+            gp.stopMusic();
+        }
         if (code == KeyEvent.VK_ENTER) {
             enterPressed = true;
+        }
+        if (code == KeyEvent.VK_R){
+            gp.tileM.loadMap("/res/maps/map 1.txt");
+            System.out.println("reloaded");
         }
         if (code == KeyEvent.VK_ESCAPE) {
             gp.gameState = gp.pauseState;

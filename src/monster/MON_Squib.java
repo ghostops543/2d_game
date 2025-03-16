@@ -2,6 +2,8 @@ package monster;
 
 import Main.PanelSettings;
 import entitys.Entity;
+import entitys.Projectile;
+import objects.OBJ_Squib_bullet;
 
 import java.util.Random;
 
@@ -17,7 +19,9 @@ public class MON_Squib extends Entity {
         maxLife = 6;
         life = maxLife;
         attackDamage=1;
+        velocity = 3;
         exp = 2;
+        projectile = new OBJ_Squib_bullet(gp);
 
 
         solidArea.x=3;
@@ -59,6 +63,25 @@ public class MON_Squib extends Entity {
                 direction = "right";
             }
             antiFidgetSpin = 0;
+
+        }
+        int i = new Random().nextInt(100)+1;
+        if (i>99  && !projectile.alive && fireBuffer == 21){
+            double targetX = gp.player.worldx;
+            double targetY = gp.player.worldy;
+            double startX = worldx;
+            double startY = worldy;
+
+            gp.monster_xDif = targetX - startX;//y magnitude
+            gp.monster_yDif = targetY - startY;//x magnitude
+            double sd = Math.sqrt((gp.monster_yDif * gp.monster_yDif) + (gp.monster_xDif * gp.monster_xDif));
+            gp.monster_xDif /= sd;
+            gp.monster_yDif /= sd;
+
+
+            projectile.set((int) worldx, (int) worldy, true, this);
+            gp.projectileList.add(projectile);
+            fireBuffer = 0;
         }
     }
     public void damageReaction() {
@@ -69,6 +92,7 @@ public class MON_Squib extends Entity {
             case "right": direction = "left"; break;
             case "down": direction = "up"; break;
         }
+
 
 
         //direction = gp.player.direction;

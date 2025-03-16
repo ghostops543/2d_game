@@ -4,10 +4,12 @@ package entitys;
 import Main.KeyHandler;
 import Main.PanelSettings;
 import objects.OBJ_bullet;
+import objects.OBJ_machine_gun;
 import objects.OBJ_revolver;
 import objects.OBJ_start_armour;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 public class Player extends Entity {
@@ -71,7 +73,7 @@ public class Player extends Entity {
         attackDamage = currentWeapon.attackDamage;
         fireRate = currentWeapon.fireRate;
         velocity = currentWeapon.velocity;
-
+        ammoCount= currentWeapon.ammoCount;
         defense = currentArmor.defense;
 
 
@@ -98,12 +100,45 @@ public class Player extends Entity {
         attackLeft1 = setup("player/weapon/shrimp_revolver_left1",gp.tileSize*2, gp.tileSize);
         attackLeft2 = setup("player/weapon/shrimp_revolver_left2",gp.tileSize*2, gp.tileSize);
     }
+    public void shoot(){
+
+        projectile = new OBJ_bullet(gp);
+        if (hotbar[invNum - 1] != null && projectile.haveAmmo(this)) {
+            attacking = true;
+            projectile.subtractAmmo(this);
+            gp.playSoundEffect(1);
+            projectile.set((int) worldx, (int) worldy, true, this);
+            gp.projectileList.add(projectile);
+        }
+    }
 
     public void update() {
+        //sets wepon based on hotbar slot
+        if (hotbar[invNum-1] != null) {
+            if (keyH.inv1 || keyH.inv2 || keyH.inv3|| keyH.inv4||keyH.inv5) {
+                switch (hotbar[invNum - 1]) {
+                    case "machine gun":
+                        gp.player.currentWeapon = new OBJ_machine_gun(gp);
+                        System.out.println("machine gun");
+                        break;
+                    case "revolver":
+                        gp.player.currentWeapon = new OBJ_revolver(gp);
+                        System.out.println("revolver");
+
+                        break;
+                }
+                attackDamage = currentWeapon.attackDamage;
+                fireRate = currentWeapon.fireRate;
+                velocity = currentWeapon.velocity;
+                ammoCount= currentWeapon.magazineSize;
+                ammoCost = currentWeapon.ammoCost;
+            }
+        }
 
         if (attacking) {
             attacking();
-        } else if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed || keyH.enterPressed || keyH.shoot) {// stops sprite moving when stationary
+        }
+        if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed || keyH.enterPressed || keyH.shoot) {// stops sprite moving when stationary
             if (keyH.upPressed) {
                 direction = "up";
                 solidArea.width = 30;
@@ -207,13 +242,14 @@ public class Player extends Entity {
                 invincibleCount = 0;
             }
         }
-        if (!canShoot) {
-            fireBuffer++;
-            if (fireBuffer > fireRate) {
-                canShoot = true;
-                fireBuffer = 0;
-            }
-        }
+//        if (!canShoot) {
+//            fireBuffer--;
+//            System.out.println(fireBuffer);
+//            if (fireBuffer <= 0) {
+//                canShoot = true;
+//                fireBuffer = gp.player.currentWeapon.fireRate;
+//            }
+//        }
     }
 
     public void attacking(){
@@ -256,7 +292,15 @@ public class Player extends Entity {
 
             String objectName = gp.obj[gp.currentMap][index].name;
             gp.obj[gp.currentMap][index].use(this);
-            hotbar[invNum-1] = objectName;
+            if (hotbar[invNum-1] == null) {
+                hotbar[invNum - 1] = objectName;
+                getWeapon(objectName);
+            }
+            else{
+                inventory.add(objectName);
+
+            }
+            gp.ui.addMessage("You have picked up " + objectName);
             gp.obj[gp.currentMap][index] = null;
 
         }
@@ -271,12 +315,12 @@ public class Player extends Entity {
         }
         else{
             if(gp.keyH.shoot|| gp.shoot){
-                if(hotbar[invNum-1] != null && canShoot) {
-                    canShoot = false;
+                System.out.println("shoot");
+                if(hotbar[invNum-1] != null && gp.projectileList.size() != gp.player.currentWeapon.bulletCount) {
                     attacking = true;
                     gp.playSoundEffect(1);
                     projectile = new OBJ_bullet(gp);
-                    projectile.set((int) worldx, (int) worldy, direction, true, this);
+                    projectile.set((int) worldx, (int) worldy, true, this);
                     gp.projectileList.add(projectile);
 
 
@@ -319,8 +363,7 @@ public class Player extends Entity {
             }
         }
     }
-    public void checkLevelUp()
-    {
+    public void checkLevelUp() {
         while(exp >= nextLevelExp)
         {
             level++;
@@ -333,9 +376,22 @@ public class Player extends Entity {
             {
                 nextLevelExp = nextLevelExp + 8;  //After Level 6: 28xp- 36xp- 44xp- 52xp- 60xp
             }
-            maxLife += 2;
-
         }
+    }
+    public void getWeapon(String objectName) {
+        switch (objectName){
+            case"revolver":
+                currentWeapon = new OBJ_revolver(gp);
+                break;
+            case"machine gun":
+                currentWeapon = new OBJ_machine_gun(gp);
+                projectile = new OBJ_bullet(gp);
+        }
+        attackDamage = currentWeapon.attackDamage;
+        fireRate = currentWeapon.fireRate;
+        velocity = currentWeapon.velocity;
+        ammoCount= currentWeapon.magazineSize;
+        ammoCost = currentWeapon.ammoCost;
     }
     public void draw(Graphics2D g2){
 //        g2.setColor(Color.WHITE);

@@ -29,7 +29,6 @@ public class UI {
     public boolean messageOn = false;
     ArrayList<String> message = new ArrayList<>();
     ArrayList<Integer> messageCounter = new ArrayList<>();
-    int messagecount = 0;
     public String currentDialogue = "";
     public int commandNum = 0;
     public Entity npc;
@@ -84,6 +83,7 @@ public class UI {
         if (gp.gameState == gp.playState) {
            drawHud();
            drawCrosshair();
+           drawMessage();
         }
         if (gp.gameState == gp.pauseState) {
             drawPauseScreen();
@@ -346,7 +346,7 @@ public class UI {
         texty += lineHeight;
         g2.drawString("Coins: " + gp.player.coin, statsx, texty);
         texty += lineHeight;
-        g2.drawString("Exp: " + gp.player.exp, statsx, texty);
+        g2.drawString("Exp: " + gp.player.exp + "" + gp.player.nextLevelExp, statsx, texty);
         //player view
         int playerWidth = gp.tileSize * 4;
         texty = framey + 20;
@@ -508,6 +508,29 @@ public class UI {
     public void addMessage(String text) {
         message.add(text);
         messageCounter.add(0);
+    }
+    public void drawMessage() {
+        int messageX = gp.screenWidth - gp.tileSize*4;
+        int messageY = gp.tileSize;
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 16f));
+        for (int i = 0; i < message.size(); i++) {
+            if (message.get(i)!=null) {
+
+                g2.setColor(Color.black);
+                g2.drawString(message.get(i), messageX+1, messageY+1);
+                int counter = messageCounter.get(i)+1;
+                g2.setColor(new Color(255,255,255, 200));
+                g2.drawString(message.get(i), messageX, messageY);
+                messageCounter.set(i,counter);
+                messageY += 20;
+
+                if(messageCounter.get(i)>180){
+                    message.remove(i);
+                    messageCounter.remove(i);
+                }
+            }
+        }
+
     }
     public int getX (String text){
         int length = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();

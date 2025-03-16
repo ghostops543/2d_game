@@ -24,6 +24,8 @@ public class Entity {
     public int velocity = 2;
     public double reloadTime;
     public int fireDistance;
+    public int ammoCount = magazineSize;
+    public int ammoCost;
 
     //player attributes
     public String name;
@@ -44,7 +46,7 @@ public class Entity {
     public boolean attacking;
     public boolean collision = false;
     public String[] hotbar = new String[5];
-    public ArrayList<Entity> inventory = new ArrayList<>();
+    public ArrayList<String> inventory = new ArrayList<String>();
     public String direction ="down";
 
 
@@ -71,7 +73,7 @@ public class Entity {
     public int spriteCounter = 0;
     int dyingCounter = 0;
     int hpBarCounter = 0;
-    int fireBuffer=0;
+    public int fireBuffer = 0;
 
     //type
     public int type;
@@ -174,7 +176,9 @@ public class Entity {
                 invincibleCount = 0;
             }
         }
-
+        if (fireBuffer <=20){
+            fireBuffer++;
+        }
     }
 
 
@@ -260,12 +264,10 @@ public class Entity {
                 else{
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
                 }
-                if (name == "Squib" && invincibleCount < 20){
-                    speed = 10;
+                if (invincibleCount < 20){
+                    damageReaction();
                 }
-                else if (name == "Squib" && invincibleCount > 20){
-                    speed = 1;
-                }
+
             }
             if(dying){
                 dyingAnimation(g2);
@@ -282,20 +284,11 @@ public class Entity {
         if(dyingCounter <= 5){
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0f));
         }
-        if(dyingCounter > 5 && dyingCounter <= 15){
+        if(dyingCounter > 5 && dyingCounter <= 10) {
 
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
-        if(dyingCounter > 15 && dyingCounter <= 25){
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0f));
-        }
-        if(dyingCounter > 25 && dyingCounter <= 35) {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        }
-        if(dyingCounter > 35 && dyingCounter <= 40){
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0f));
-        }
-        if (dyingCounter > 40){
+        if (dyingCounter > 10){
             dying = false;
             alive = false;
             gp.player.exp += exp;
