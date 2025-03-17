@@ -36,6 +36,7 @@ public class UI {
     public int crossHairCounter = 0;
     public int crossHairNum;
     int spin=0;
+    public BufferedImage[] hotbarImg = new BufferedImage[5];
 
 
 
@@ -135,9 +136,11 @@ public class UI {
         switch (gp.player.invNum) {
             case 1:
                 g2.drawImage(inv_frame_hover, 15, 25, gp.tileSize, gp.tileSize, null);
+
                 break;
             case 2:
                 g2.drawImage(inv_frame_hover, 65, 25, gp.tileSize, gp.tileSize, null);
+
                 break;
             case 3:
                 g2.drawImage(inv_frame_hover, 115, 25, gp.tileSize, gp.tileSize, null);
@@ -149,30 +152,23 @@ public class UI {
                 break;
             case 5:
                 g2.drawImage(inv_frame_hover, 215, 25, gp.tileSize, gp.tileSize, null);
+
                 break;
         }
-        if (gp.player.hotbar != null) {
-            for (int i = 0; i < gp.player.hotbar.length; i++) {
-                if (Objects.equals(gp.player.hotbar[i], "revolver")) {
-                    switch (i) {
-                        case 0:
-                            g2.drawImage(item, 15, 25, gp.tileSize, gp.tileSize, null);
-                            break;
-                        case 1:
-                            g2.drawImage(item, 65, 25, gp.tileSize, gp.tileSize, null);
-                            break;
-                        case 2:
-                            g2.drawImage(item, 115, 25, gp.tileSize, gp.tileSize, null);
-                            break;
-                        case 3:
-                            g2.drawImage(item, 165, 25, gp.tileSize, gp.tileSize, null);
-                            break;
-                        case 4:
-                            g2.drawImage(item, 215, 25, gp.tileSize, gp.tileSize, null);
-                            break;
-                    }
-                }
-            }
+        if (hotbarImg[0] != null) {
+            g2.drawImage(hotbarImg[0], 15, 25, gp.tileSize, gp.tileSize, null);
+        }
+        if (hotbarImg[1] != null) {
+            g2.drawImage(hotbarImg[1], 65, 25, gp.tileSize, gp.tileSize, null);
+        }
+        if (hotbarImg[2] != null) {
+            g2.drawImage(hotbarImg[2], 115, 25, gp.tileSize, gp.tileSize, null);
+        }
+        if (hotbarImg[3] != null) {
+            g2.drawImage(hotbarImg[3], 165, 25, gp.tileSize, gp.tileSize, null);
+        }
+        if (hotbarImg[4] != null) {
+            g2.drawImage(hotbarImg[4], 215, 25, gp.tileSize, gp.tileSize, null);
         }
     }
     public void drawTitle() {

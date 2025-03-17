@@ -5,8 +5,10 @@ import entitys.Entity;
 import entitys.Player;
 
 public class OBJ_machine_gun extends Entity {
+    PanelSettings gp;
     public OBJ_machine_gun(PanelSettings gp) {
         super(gp);
+        this.gp = gp;
         name = "machine gun";
         fireRate = 2;
         bulletCount = fireRate * 10;
@@ -15,13 +17,14 @@ public class OBJ_machine_gun extends Entity {
         reloadTime= .8;
         attackDamage = 1;
         velocity = 10;
-        down1 = setup("/objects/revolver",gp.tileSize, gp.tileSize);
+        down1 = setup("/objects/machine gun",gp.tileSize, gp.tileSize);
         collisionOn = true;
         fireDistance=100;
     }
     public boolean use(Player player) {
 
         player.hotbar[player.invNum-1] = "machine gun";
+        gp.ui.hotbarImg[player.invNum-1] = down1;
         return true;
     }
 }

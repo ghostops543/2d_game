@@ -11,8 +11,10 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class OBJ_revolver extends Entity {
+    PanelSettings gp;
     public OBJ_revolver(PanelSettings gp) {
         super(gp);
+        this.gp = gp;
         name = "revolver";
         fireRate = 4;
         bulletCount = 10;
@@ -28,6 +30,7 @@ public class OBJ_revolver extends Entity {
     public boolean use(Player player) {
 
         player.hotbar[player.invNum-1] = "revolver";
+        gp.ui.hotbarImg[player.invNum-1] = down1;
         return true;
     }
 }

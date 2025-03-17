@@ -295,6 +295,7 @@ public class Player extends Entity {
             if (hotbar[invNum-1] == null) {
                 hotbar[invNum - 1] = objectName;
                 getWeapon(objectName);
+                gp.ui.hotbarImg[invNum -1] = currentWeapon.down1;
             }
             else{
                 inventory.add(objectName);
@@ -385,8 +386,9 @@ public class Player extends Entity {
                 break;
             case"machine gun":
                 currentWeapon = new OBJ_machine_gun(gp);
-                projectile = new OBJ_bullet(gp);
+                break;
         }
+
         attackDamage = currentWeapon.attackDamage;
         fireRate = currentWeapon.fireRate;
         velocity = currentWeapon.velocity;
